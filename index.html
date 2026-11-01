@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f2eb">
+  <title>КБЖУ сложного блюда — калькулятор</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #101010;
+      --muted: #383838;
+      --line: #777;
+      --paper: #fff;
+      --canvas: #008080;
+      --green: #000080;
+      --green-soft: #d8ffff;
+      --orange: #ff0;
+      font-family: "Times New Roman", Times, serif;
+      color: var(--ink);
+      background: var(--canvas);
+    }
+    * { box-sizing: border-box; }
+    body {
+      min-width: 320px;
+      margin: 0;
+      padding: 12px;
+      color: var(--ink);
+      background-color: var(--canvas);
+      background-image: radial-gradient(#66baba 1px, transparent 1px);
+      background-size: 8px 8px;
+    }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    .page {
+      width: min(1180px, 100%);
+      margin: 12px auto;
+      padding: 12px;
+      border: 3px ridge #f4f4f4;
+      background: #c0c0c0;
+      box-shadow: 5px 5px 0 #004b4b;
+    }
+    .layout { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(280px, .8fr); align-items: start; gap: 12px; }
+    .card { min-width: 0; padding: 12px; border: 3px outset #eee; background: var(--paper); box-shadow: none; }
+    .recipe-card { overflow: hidden; }
+    .table-wrap { max-width: 100%; overflow-x: auto; }
+    table { width: 100%; min-width: 700px; border-collapse: collapse; }
+    th { padding: 7px 5px; border: 1px solid #fff; color: #fff; background: #000080; text-align: right; }
+    th:first-child, td:first-child { padding-left: 6px; text-align: left; }
+    th:last-child, td:last-child { padding-right: 6px; }
+    td { padding: 1px 3px; border: 0; text-align: right; vertical-align: middle; }
+    td:first-child { width: 30%; }
+    .field { display: block; width: 100%; min-width: 72px; height: 32px; padding: 3px 5px; border: 2px inset #ddd; border-radius: 0; outline: none; color: #000; background: #fff; text-align: right; appearance: textfield; -moz-appearance: textfield; }
+    .field::-webkit-inner-spin-button, .field::-webkit-outer-spin-button { margin: 0; appearance: none; -webkit-appearance: none; }
+    .field.name { min-width: 125px; text-align: left; }
+    .field:focus { outline: 1px dotted #000080; outline-offset: -4px; }
+    .field:out-of-range { border-color: #d00; background: #fff0f0; }
+    .table-actions { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 8px 2px 12px; }
+    .add-row, .text-button {
+      display: inline-flex;
+      min-height: 32px;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 9px;
+      border: 2px outset #f4f4f4;
+      border-radius: 0;
+      color: #000;
+      background: #c0c0c0;
+      font-weight: bold;
+      line-height: 1.2;
+    }
+    .add-row:active, .text-button:active, .remove:active { border-style: inset; }
+    .add-row span { display: inline-grid; width: 17px; height: 17px; place-items: center; border: 1px solid #555; line-height: 1; }
+    .weight-block { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 0 2px 2px; padding: 9px; border: 2px inset #eee; background: #e5e5e5; }
+    .weight-block label { display: block; font-weight: bold; }
+    .weight-block small { display: block; margin-top: 3px; }
+    .weight-input { display: flex; align-items: center; gap: 6px; }
+    .weight-input input { width: 100px; height: 32px; padding: 3px 5px; border: 2px inset #ddd; border-radius: 0; background: #fff; text-align: right; }
+    .right-col { display: grid; gap: 12px; }
+    .result-card { color: #fff; background: #000080; }
+    .result-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-bottom: 8px; border-bottom: 1px dashed #fff; }
+    .result-heading h2 { margin: 0; }
+    .badge { padding: 2px 5px; border: 1px solid #fff; background: #008080; white-space: nowrap; }
+    .kcal { margin: 12px 0; padding: 8px; border: 2px inset #eee; color: #000; background: #fff; text-align: center; }
+    .kcal .value { font-weight: bold; }
+    .kcal .caption { margin-top: 3px; }
+    .macros { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; }
+    .macro { padding: 7px 5px; border: 2px inset #eee; color: #000; background: #e5e5e5; text-align: center; }
+    .macro .value { display: block; font-weight: bold; }
+    .macro .label { display: block; margin-top: 3px; }
+    .batch-row { display: flex; justify-content: space-between; gap: 8px; margin-top: 10px; padding-top: 8px; border-top: 1px dashed #fff; }
+    .formula-card { color: #000; background: #ffffcc; }
+    .formula { padding: 9px; border: 1px dashed #000080; color: #000080; background: #fff; text-align: center; }
+    .loss { display: flex; justify-content: space-between; gap: 8px; margin-top: 9px; padding-top: 7px; border-top: 1px dotted #777; }
+    .notice { display: none; margin: 9px 2px 2px; padding: 7px; border: 2px inset #eee; color: #800; background: #fff0f0; }
+    .notice.show { display: block; }
+    @media (max-width: 800px) { .layout { grid-template-columns: 1fr; } }
+    @media (max-width: 520px) {
+      body { padding: 5px; }
+      .page { margin: 5px auto; padding: 7px; }
+      .card { padding: 8px; }
+      .table-actions { align-items: stretch; flex-direction: column; }
+      .table-actions button { justify-content: center; }
+      .weight-block { align-items: flex-start; flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="layout">
+      <section class="card recipe-card" aria-label="Состав блюда">
+        <div class="table-wrap">
+          <table aria-label="Ингредиенты и их пищевая ценность">
+            <thead><tr><th>Ингредиент</th><th>Масса, г</th><th>Ккал / 100 г</th><th>Б, г</th><th>Ж, г</th><th>У, г</th><th aria-label="Удалить"></th></tr></thead>
+            <tbody id="ingredients"></tbody>
+          </table>
+        </div>
+        <div class="table-actions">
+          <button class="add-row" id="add" type="button"><span aria-hidden="true">+</span> Добавить ингредиент</button>
+          <button class="text-button" id="fill-example" type="button">Заполнить примером</button>
+        </div>
+        <div class="weight-block">
+          <div><label for="cooked-weight">Вес готового блюда</label><small>После приготовления</small></div>
+          <div class="weight-input"><input id="cooked-weight" type="number" min="0" step="1" inputmode="decimal" value="0" aria-label="Вес готового блюда в граммах"><span class="unit">г</span></div>
+        </div>
+        <div class="notice" id="notice" role="status"></div>
+      </section>
+
+      <aside class="right-col">
+        <section class="card result-card" aria-labelledby="result-title" aria-live="polite">
+          <div class="result-heading"><h2 id="result-title">На 100 г готового блюда</h2><span class="badge">с учётом ужарки</span></div>
+          <div class="kcal"><div class="value" id="out-kcal">—</div><div class="caption">килокалорий</div></div>
+          <div class="macros">
+            <div class="macro"><span class="value" id="out-protein">—</span><span class="label">Белки, г</span></div>
+            <div class="macro"><span class="value" id="out-fat">—</span><span class="label">Жиры, г</span></div>
+            <div class="macro"><span class="value" id="out-carbs">—</span><span class="label">Углеводы, г</span></div>
+          </div>
+          <div class="batch-row"><span>На всё блюдо</span><strong id="batch-kcal">— ккал</strong></div>
+        </section>
+
+        <section class="card formula-card" aria-label="Формула расчёта">
+          <div class="formula">КБЖУ на 100 г = Σ (КБЖУ ингредиента × масса) ÷ вес готового блюда</div>
+          <div class="loss"><span>Изменение веса при готовке</span><strong id="weight-change">—</strong></div>
+        </section>
+      </aside>
+    </div>
+  </main>
+
+  <template id="row-template">
+    <tr>
+      <td><input class="field name" type="text" aria-label="Название ингредиента" placeholder="Например, рис"></td>
+      <td><input class="field amount" type="number" min="0" step="any" inputmode="decimal" value="0" aria-label="Масса ингредиента в граммах"></td>
+      <td><input class="field kcal" type="number" min="0" step="any" inputmode="decimal" value="0" aria-label="Калорийность на 100 граммов"></td>
+      <td><input class="field protein" type="number" min="0" max="100" step="any" inputmode="decimal" value="0" aria-label="Белки на 100 граммов"></td>
+      <td><input class="field fat" type="number" min="0" max="100" step="any" inputmode="decimal" value="0" aria-label="Жиры на 100 граммов"></td>
+      <td><input class="field carbs" type="number" min="0" max="100" step="any" inputmode="decimal" value="0" aria-label="Углеводы на 100 граммов"></td>
+      <td><button class="remove" type="button" aria-label="Удалить ингредиент" title="Удалить">×</button></td>
+    </tr>
+  </template>
+  <script>
+    (() => {
+      const body = document.querySelector('#ingredients');
+      const template = document.querySelector('#row-template');
+      const cookedWeight = document.querySelector('#cooked-weight');
+      const notice = document.querySelector('#notice');
+      const storageKey = 'kbju-complex-recipe-v1';
+      const example = [
+        { name: 'Куриная грудка', amount: 1083, kcal: 116, protein: 20, fat: 4, carbs: 0 },
+        { name: 'Мёд', amount: 17, kcal: 320, protein: 0, fat: 0, carbs: 80 },
+        { name: 'Соевый соус', amount: 25, kcal: 85, protein: 1.1, fat: 0.1, carbs: 4.3 },
+        { name: 'Томатная паста', amount: 23, kcal: 65, protein: 1.3, fat: 0.2, carbs: 14.5 }
+      ];
+      const read = (row, key) => Number(row.querySelector(`.${key}`).value) || 0;
+      const fmt = value => new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 1 }).format(value);
+
+      function save() {
+        const state = {
+          rows: [...body.querySelectorAll('tr')].map(row => Object.fromEntries(
+            ['name', 'amount', 'kcal', 'protein', 'fat', 'carbs'].map(key => [key, row.querySelector(`.${key}`).value])
+          )),
+          cookedWeight: cookedWeight.value
+        };
+        try { localStorage.setItem(storageKey, JSON.stringify(state)); } catch (_) {}
+      }
+
+      function load() {
+        try {
+          const saved = JSON.parse(localStorage.getItem(storageKey));
+          if (saved && Array.isArray(saved.rows)) return saved;
+        } catch (_) {}
+        return null;
+      }
+
+      function addRow(data = {}) {
+        const row = template.content.firstElementChild.cloneNode(true);
+        for (const key of ['name', 'amount', 'kcal', 'protein', 'fat', 'carbs']) {
+          const input = row.querySelector(`.${key}`);
+          input.value = key === 'name' ? (data[key] ?? '') : (data[key] ?? 0);
+          input.addEventListener('input', () => { calculate(); save(); });
+        }
+        row.querySelector('.remove').addEventListener('click', () => {
+          row.remove();
+          if (!body.querySelector('tr')) addRow();
+          calculate();
+          save();
+        });
+        body.append(row);
+      }
+
+      function calculate() {
+        const rows = [...body.querySelectorAll('tr')];
+        const validRows = rows.filter(row => read(row, 'amount') > 0);
+        const invalidMacro = rows.some(row => ['protein', 'fat', 'carbs'].some(key => Number(row.querySelector(`.${key}`).value) > 100));
+        const rawWeight = validRows.reduce((sum, row) => sum + read(row, 'amount'), 0);
+        const finalWeight = Number(cookedWeight.value);
+        const totals = { kcal: 0, protein: 0, fat: 0, carbs: 0 };
+        for (const row of validRows) {
+          for (const key of Object.keys(totals)) totals[key] += read(row, key) * read(row, 'amount') / 100;
+        }
+        const ready = Number.isFinite(finalWeight) && finalWeight > 0 && validRows.length > 0 && !invalidMacro;
+        for (const key of Object.keys(totals)) document.querySelector(`#out-${key}`).textContent = ready ? fmt(totals[key] / finalWeight * 100) : '—';
+        document.querySelector('#batch-kcal').textContent = ready ? `${fmt(totals.kcal)} ккал` : '— ккал';
+        document.querySelector('#weight-change').textContent = rawWeight > 0 && ready ? `${fmt((finalWeight / rawWeight - 1) * 100)}% · ${fmt(rawWeight)} → ${fmt(finalWeight)} г` : '—';
+        notice.textContent = '';
+        notice.classList.remove('show');
+        if (invalidMacro) {
+          notice.textContent = 'Белки, жиры и углеводы на 100 г не могут превышать 100 г.';
+          notice.classList.add('show');
+        } else if (!validRows.length) {
+          notice.textContent = 'Добавьте массу хотя бы одного ингредиента, чтобы получить расчёт.';
+          notice.classList.add('show');
+        } else if (!(finalWeight > 0)) {
+          notice.textContent = 'Укажите вес готового блюда больше нуля.';
+          notice.classList.add('show');
+        }
+      }
+
+      document.querySelector('#add').addEventListener('click', () => { addRow(); calculate(); save(); body.lastElementChild.querySelector('.name').focus(); });
+      document.querySelector('#fill-example').addEventListener('click', () => {
+        body.replaceChildren();
+        example.forEach(addRow);
+        cookedWeight.value = 889;
+        calculate();
+        save();
+      });
+      cookedWeight.addEventListener('input', () => { calculate(); save(); });
+      const saved = load();
+      if (saved) {
+        cookedWeight.value = saved.cookedWeight ?? 0;
+        saved.rows.forEach(row => addRow(row));
+        if (!body.querySelector('tr')) addRow();
+      } else {
+        addRow();
+      }
+      calculate();
+      save();
+    })();
+  </script>
+</body>
+</html>

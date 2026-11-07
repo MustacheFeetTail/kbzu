@@ -16,7 +16,7 @@
       --green: #000080;
       --green-soft: #d8ffff;
       --orange: #ff0;
-      font-family: "Times New Roman", Times, serif;
+      font-family: "MS Sans Serif", Tahoma, Arial, sans-serif;
       color: var(--ink);
       background: var(--canvas);
     }
@@ -56,6 +56,7 @@
     .field:focus { outline: 1px dotted #000080; outline-offset: -4px; }
     .field:out-of-range { border-color: #d00; background: #fff0f0; }
     .table-actions { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 8px 2px 12px; }
+    .table-actions-secondary { display: flex; gap: 8px; }
     .add-row, .text-button {
       display: inline-flex;
       min-height: 32px;
@@ -71,19 +72,24 @@
     }
     .add-row:active, .text-button:active, .remove:active { border-style: inset; }
     .add-row span { display: inline-grid; width: 17px; height: 17px; place-items: center; border: 1px solid #555; line-height: 1; }
-    .weight-block { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 0 2px 2px; padding: 9px; border: 2px inset #eee; background: #e5e5e5; }
-    .weight-block label { display: block; font-weight: bold; }
-    .weight-block small { display: block; margin-top: 3px; }
+    .weight-block { display: grid; grid-template-columns: 1fr 1fr; gap: 9px 14px; margin: 0 2px 2px; padding: 9px; border: 2px inset #eee; background: #e5e5e5; }
+    .weight-item { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-width: 0; }
+    .weight-item label { display: block; font-weight: bold; }
+    .weight-item small { display: block; margin-top: 3px; }
     .weight-input { display: flex; align-items: center; gap: 6px; }
     .weight-input input { width: 100px; height: 32px; padding: 3px 5px; border: 2px inset #ddd; border-radius: 0; background: #fff; text-align: right; }
+    #tare-weight:out-of-range { outline: 1px solid #d00; }
+    .net-weight { grid-column: 1 / -1; margin: 0; padding-top: 6px; border-top: 1px dotted #777; }
     .right-col { display: grid; gap: 12px; }
     .result-card { color: #fff; background: #000080; }
+    .portion-card { background: #e8e8e8; }
+    .portion-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+    .portion-head strong { color: #000080; }
+    .portion-control { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-bottom: 8px; border-bottom: 1px dotted #777; }
+    .portion-kcal { display: flex; justify-content: space-between; gap: 8px; margin: 8px 0; padding: 7px; border: 2px inset #eee; background: #fff; }
     .result-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-bottom: 8px; border-bottom: 1px dashed #fff; }
     .result-heading h2 { margin: 0; }
     .badge { padding: 2px 5px; border: 1px solid #fff; background: #008080; white-space: nowrap; }
-    .kcal { margin: 12px 0; padding: 8px; border: 2px inset #eee; color: #000; background: #fff; text-align: center; }
-    .kcal .value { font-weight: bold; }
-    .kcal .caption { margin-top: 3px; }
     .macros { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; }
     .macro { padding: 7px 5px; border: 2px inset #eee; color: #000; background: #e5e5e5; text-align: center; }
     .macro .value { display: block; font-weight: bold; }
@@ -92,16 +98,32 @@
     .formula-card { color: #000; background: #ffffcc; }
     .formula { padding: 9px; border: 1px dashed #000080; color: #000080; background: #fff; text-align: center; }
     .loss { display: flex; justify-content: space-between; gap: 8px; margin-top: 9px; padding-top: 7px; border-top: 1px dotted #777; }
-    .notice { display: none; margin: 9px 2px 2px; padding: 7px; border: 2px inset #eee; color: #800; background: #fff0f0; }
+    .notice { display: none; margin: 9px 2px 2px; padding: 7px; border: 2px inset #eee; color: #800; background: #fff0f0; white-space: pre-line; }
+    .notice.warning { color: #665000; background: #fff8cc; }
     .notice.show { display: block; }
     @media (max-width: 800px) { .layout { grid-template-columns: 1fr; } }
-    @media (max-width: 520px) {
+    @media (max-width: 600px) {
       body { padding: 5px; }
       .page { margin: 5px auto; padding: 7px; }
       .card { padding: 8px; }
+      .table-wrap { overflow: visible; }
+      table { min-width: 0; }
+      thead { display: none; }
+      tbody { display: grid; gap: 6px; }
+      tbody tr { position: relative; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px 5px; padding: 7px; border: 2px inset #ddd; background: #eee; }
+      tbody td { display: flex; min-width: 0; width: auto; flex-direction: column; align-items: stretch; gap: 3px; padding: 0; text-align: left; }
+      tbody td::before { content: attr(data-label); }
+      tbody td:first-child { grid-column: 1 / -1; width: auto; padding-right: 32px; }
+      tbody td:last-child { position: absolute; top: 5px; right: 5px; display: block; padding: 0; }
+      .field, .field.name { width: 100%; min-width: 0; height: 34px; }
+      .remove { width: 28px; height: 28px; }
       .table-actions { align-items: stretch; flex-direction: column; }
+      .table-actions-secondary { display: grid; grid-template-columns: 1fr 1fr; }
       .table-actions button { justify-content: center; }
-      .weight-block { align-items: flex-start; flex-direction: column; }
+      .weight-block { grid-template-columns: 1fr; }
+      .weight-item { align-items: flex-start; }
+      .weight-input input { width: 96px; }
+      .net-weight { grid-column: auto; }
     }
   </style>
 </head>
@@ -117,11 +139,21 @@
         </div>
         <div class="table-actions">
           <button class="add-row" id="add" type="button"><span aria-hidden="true">+</span> Добавить ингредиент</button>
-          <button class="text-button" id="fill-example" type="button">Заполнить примером</button>
+          <div class="table-actions-secondary">
+            <button class="text-button" id="fill-example" type="button">Заполнить примером</button>
+            <button class="text-button" id="clear-all" type="button">Очистить всё</button>
+          </div>
         </div>
         <div class="weight-block">
-          <div><label for="cooked-weight">Вес готового блюда</label><small>После приготовления</small></div>
-          <div class="weight-input"><input id="cooked-weight" type="number" min="0" step="1" inputmode="decimal" value="0" aria-label="Вес готового блюда в граммах"><span class="unit">г</span></div>
+          <div class="weight-item">
+            <div><label for="cooked-weight">Вес</label></div>
+            <div class="weight-input"><input id="cooked-weight" type="number" min="0" step="1" inputmode="decimal" value="0" aria-label="Вес блюда вместе с тарой в граммах"><span class="unit">г</span></div>
+          </div>
+          <div class="weight-item">
+            <div><label for="tare-weight">Вес тары</label></div>
+            <div class="weight-input"><input id="tare-weight" type="number" min="0" step="1" inputmode="decimal" value="0" aria-label="Вес тары в граммах"><span class="unit">г</span></div>
+          </div>
+          <p class="net-weight">Чистый вес блюда (вес − тара): <strong id="net-weight">0 г</strong></p>
         </div>
         <div class="notice" id="notice" role="status"></div>
       </section>
@@ -138,6 +170,20 @@
           <div class="batch-row"><span>На всё блюдо</span><strong id="batch-kcal">— ккал</strong></div>
         </section>
 
+        <section class="card portion-card" aria-label="КБЖУ на порцию">
+          <div class="portion-head"><strong>На порцию</strong></div>
+          <div class="portion-control">
+            <label for="portion-weight">Вес порции</label>
+            <div class="weight-input"><input id="portion-weight" type="number" min="0" step="1" inputmode="decimal" value="0" aria-label="Вес порции в граммах"><span class="unit">г</span></div>
+          </div>
+          <div class="portion-kcal"><span>Калорийность</span><strong id="portion-kcal">— ккал</strong></div>
+          <div class="macros">
+            <div class="macro"><span class="value" id="portion-protein">—</span><span class="label">Белки, г</span></div>
+            <div class="macro"><span class="value" id="portion-fat">—</span><span class="label">Жиры, г</span></div>
+            <div class="macro"><span class="value" id="portion-carbs">—</span><span class="label">Углеводы, г</span></div>
+          </div>
+        </section>
+
         <section class="card formula-card" aria-label="Формула расчёта">
           <div class="formula">КБЖУ на 100 г = Σ (КБЖУ ингредиента × масса) ÷ вес готового блюда</div>
           <div class="loss"><span>Изменение веса при готовке</span><strong id="weight-change">—</strong></div>
@@ -148,12 +194,12 @@
 
   <template id="row-template">
     <tr>
-      <td><input class="field name" type="text" aria-label="Название ингредиента" placeholder="Например, рис"></td>
-      <td><input class="field amount" type="number" min="0" step="any" inputmode="decimal" value="0" aria-label="Масса ингредиента в граммах"></td>
-      <td><input class="field kcal" type="number" min="0" step="any" inputmode="decimal" value="0" aria-label="Калорийность на 100 граммов"></td>
-      <td><input class="field protein" type="number" min="0" max="100" step="any" inputmode="decimal" value="0" aria-label="Белки на 100 граммов"></td>
-      <td><input class="field fat" type="number" min="0" max="100" step="any" inputmode="decimal" value="0" aria-label="Жиры на 100 граммов"></td>
-      <td><input class="field carbs" type="number" min="0" max="100" step="any" inputmode="decimal" value="0" aria-label="Углеводы на 100 граммов"></td>
+      <td data-label="Ингредиент"><input class="field name" type="text" aria-label="Название ингредиента" placeholder="Например, рис"></td>
+      <td data-label="Масса, г"><input class="field amount" type="number" min="0" step="any" inputmode="decimal" value="0" aria-label="Масса ингредиента в граммах"></td>
+      <td data-label="Ккал / 100 г"><input class="field kcal" type="number" min="0" step="any" inputmode="decimal" value="0" aria-label="Калорийность на 100 граммов"></td>
+      <td data-label="Белки, г"><input class="field protein" type="number" min="0" max="100" step="any" inputmode="decimal" value="0" aria-label="Белки на 100 граммов"></td>
+      <td data-label="Жиры, г"><input class="field fat" type="number" min="0" max="100" step="any" inputmode="decimal" value="0" aria-label="Жиры на 100 граммов"></td>
+      <td data-label="Углеводы, г"><input class="field carbs" type="number" min="0" max="100" step="any" inputmode="decimal" value="0" aria-label="Углеводы на 100 граммов"></td>
       <td><button class="remove" type="button" aria-label="Удалить ингредиент" title="Удалить">×</button></td>
     </tr>
   </template>
@@ -162,6 +208,9 @@
       const body = document.querySelector('#ingredients');
       const template = document.querySelector('#row-template');
       const cookedWeight = document.querySelector('#cooked-weight');
+      const tareWeight = document.querySelector('#tare-weight');
+      const portionWeight = document.querySelector('#portion-weight');
+      const netWeight = document.querySelector('#net-weight');
       const notice = document.querySelector('#notice');
       const storageKey = 'kbju-complex-recipe-v1';
       const example = [
@@ -171,14 +220,16 @@
         { name: 'Томатная паста', amount: 23, kcal: 65, protein: 1.3, fat: 0.2, carbs: 14.5 }
       ];
       const read = (row, key) => Number(row.querySelector(`.${key}`).value) || 0;
-      const fmt = value => new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 1 }).format(value);
+      const fmt = value => new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 1 }).format(value).replace(/^-/, '−');
 
       function save() {
         const state = {
           rows: [...body.querySelectorAll('tr')].map(row => Object.fromEntries(
             ['name', 'amount', 'kcal', 'protein', 'fat', 'carbs'].map(key => [key, row.querySelector(`.${key}`).value])
           )),
-          cookedWeight: cookedWeight.value
+          cookedWeight: cookedWeight.value,
+          tareWeight: tareWeight.value,
+          portionWeight: portionWeight.value
         };
         try { localStorage.setItem(storageKey, JSON.stringify(state)); } catch (_) {}
       }
@@ -212,27 +263,56 @@
         const validRows = rows.filter(row => read(row, 'amount') > 0);
         const invalidMacro = rows.some(row => ['protein', 'fat', 'carbs'].some(key => Number(row.querySelector(`.${key}`).value) > 100));
         const rawWeight = validRows.reduce((sum, row) => sum + read(row, 'amount'), 0);
-        const finalWeight = Number(cookedWeight.value);
+        const grossWeight = Number(cookedWeight.value);
+        const tare = Number(tareWeight.value) || 0;
+        const finalWeight = grossWeight - tare;
+        tareWeight.max = String(Math.max(0, Math.ceil(grossWeight || 0) - 1));
+        netWeight.textContent = `${fmt(Math.max(0, finalWeight))} г`;
         const totals = { kcal: 0, protein: 0, fat: 0, carbs: 0 };
         for (const row of validRows) {
           for (const key of Object.keys(totals)) totals[key] += read(row, key) * read(row, 'amount') / 100;
         }
-        const ready = Number.isFinite(finalWeight) && finalWeight > 0 && validRows.length > 0 && !invalidMacro;
+        const invalidTare = tare > 0 && tare >= grossWeight;
+        const ready = Number.isFinite(finalWeight) && finalWeight > 0 && validRows.length > 0 && !invalidMacro && !invalidTare;
         for (const key of Object.keys(totals)) document.querySelector(`#out-${key}`).textContent = ready ? fmt(totals[key] / finalWeight * 100) : '—';
         document.querySelector('#batch-kcal').textContent = ready ? `${fmt(totals.kcal)} ккал` : '— ккал';
-        document.querySelector('#weight-change').textContent = rawWeight > 0 && ready ? `${fmt((finalWeight / rawWeight - 1) * 100)}% · ${fmt(rawWeight)} → ${fmt(finalWeight)} г` : '—';
-        notice.textContent = '';
-        notice.classList.remove('show');
-        if (invalidMacro) {
-          notice.textContent = 'Белки, жиры и углеводы на 100 г не могут превышать 100 г.';
-          notice.classList.add('show');
-        } else if (!validRows.length) {
-          notice.textContent = 'Добавьте массу хотя бы одного ингредиента, чтобы получить расчёт.';
-          notice.classList.add('show');
-        } else if (!(finalWeight > 0)) {
-          notice.textContent = 'Укажите вес готового блюда больше нуля.';
-          notice.classList.add('show');
+        const portion = Number(portionWeight.value);
+        const portionReady = ready && Number.isFinite(portion) && portion > 0;
+        document.querySelector('#portion-kcal').textContent = portionReady ? `${fmt(totals.kcal / finalWeight * portion)} ккал` : '— ккал';
+        for (const key of ['protein', 'fat', 'carbs']) {
+          document.querySelector(`#portion-${key}`).textContent = portionReady ? fmt(totals[key] / finalWeight * portion) : '—';
         }
+        document.querySelector('#weight-change').textContent = rawWeight > 0 && ready ? `${fmt((finalWeight / rawWeight - 1) * 100)}% · ${fmt(rawWeight)} → ${fmt(finalWeight)} г` : '—';
+        const messages = [];
+        if (invalidMacro) {
+          messages.push('Белки, жиры и углеводы на 100 г не могут превышать 100 г.');
+        }
+        if (!validRows.length) messages.push('Добавьте массу хотя бы одного ингредиента, чтобы получить расчёт.');
+        if (!(grossWeight > 0)) messages.push('Укажите вес блюда вместе с тарой.');
+        else if (invalidTare) messages.push('Вес тары должен быть меньше веса блюда на весах.');
+        const errorCount = messages.length;
+
+        for (const [index, row] of validRows.entries()) {
+          const declaredKcal = read(row, 'kcal');
+          const macroKcal = 4 * read(row, 'protein') + 9 * read(row, 'fat') + 4 * read(row, 'carbs');
+          const difference = declaredKcal > 0
+            ? Math.abs(macroKcal - declaredKcal) / declaredKcal
+            : (macroKcal > 0 ? 1 : 0);
+          if (difference > 0.2) {
+            const name = row.querySelector('.name').value.trim() || `Ингредиент ${index + 1}`;
+            messages.push(`${name}: по БЖУ примерно ${fmt(macroKcal)} ккал/100 г, указано ${fmt(declaredKcal)} ккал (расхождение больше 20%).`);
+          }
+          if (declaredKcal > 900) {
+            const name = row.querySelector('.name').value.trim() || `Ингредиент ${index + 1}`;
+            messages.push(`${name}: высокая калорийность — ${fmt(declaredKcal)} ккал/100 г. Проверьте значение.`);
+          }
+        }
+        if (ready && totals.kcal / finalWeight * 100 > 900) {
+          messages.push(`Готовое блюдо: высокая калорийность — ${fmt(totals.kcal / finalWeight * 100)} ккал/100 г. Проверьте вес и исходные данные.`);
+        }
+        notice.textContent = messages.join('\n');
+        notice.classList.toggle('show', messages.length > 0);
+        notice.classList.toggle('warning', messages.length > 0 && messages.length === errorCount);
       }
 
       document.querySelector('#add').addEventListener('click', () => { addRow(); calculate(); save(); body.lastElementChild.querySelector('.name').focus(); });
@@ -240,13 +320,28 @@
         body.replaceChildren();
         example.forEach(addRow);
         cookedWeight.value = 889;
+        tareWeight.value = 0;
         calculate();
         save();
       });
+      document.querySelector('#clear-all').addEventListener('click', () => {
+        body.replaceChildren();
+        addRow();
+        cookedWeight.value = 0;
+        tareWeight.value = 0;
+        portionWeight.value = 0;
+        calculate();
+        save();
+        body.querySelector('.name').focus();
+      });
       cookedWeight.addEventListener('input', () => { calculate(); save(); });
+      tareWeight.addEventListener('input', () => { calculate(); save(); });
+      portionWeight.addEventListener('input', () => { calculate(); save(); });
       const saved = load();
       if (saved) {
         cookedWeight.value = saved.cookedWeight ?? 0;
+        tareWeight.value = saved.tareWeight ?? 0;
+        portionWeight.value = saved.portionWeight ?? 0;
         saved.rows.forEach(row => addRow(row));
         if (!body.querySelector('tr')) addRow();
       } else {

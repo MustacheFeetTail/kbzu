@@ -12,8 +12,8 @@
       --muted: #404040;
       --line: #808080;
       --paper: #fff;
-      --face: #d4d0c8;
-      --face-light: #d4d0c8;
+      --face: #e0dcd4;
+      --face-light: #e0dcd4;
       --canvas: #008080;
       --green: #000080;
       --green-soft: #d8ffff;
@@ -42,14 +42,15 @@
       width: min(1180px, 100%);
       margin: 12px auto;
       padding: 12px;
-      border: 2px outset #f4f4f4;
+      border: 2px outset #fff;
       background: var(--face);
       box-shadow: none;
     }
     .layout { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(280px, .8fr); align-items: start; gap: 12px; }
     .card { min-width: 0; padding: 12px; border: 1px solid #808080; background: var(--face-light); box-shadow: none; }
-    .recipe-card { overflow: hidden; }
-    .ingredients-title { margin: 0 0 8px; font-size: inherit; }
+    .group-card { min-inline-size: 0; margin: 0; padding: 4px 12px 12px; border: 1px solid #808080; }
+    .group-title { margin-bottom: 8px; padding: 0 5px; font-weight: bold; }
+    .recipe-card { overflow: visible; }
     .table-wrap { max-width: 100%; overflow: visible; }
     table { width: 100%; min-width: 0; border-collapse: collapse; table-layout: fixed; }
     th { overflow: hidden; padding: 7px 5px; border: 1px solid #fff; color: #fff; background: #000080; text-align: right; white-space: nowrap; }
@@ -57,7 +58,7 @@
     td:first-child { width: 10em; padding-left: 0; text-align: left; }
     th:last-child, td:last-child { width: 32px; padding-right: 6px; }
     td { padding: 1px 3px; border: 0; text-align: right; vertical-align: middle; }
-    .field { display: block; width: 100%; min-width: 0; height: 23px; padding: 2px 4px; border: 2px inset #ddd; border-radius: 0; outline: none; color: #000; background: #fff; text-align: right; appearance: textfield; -moz-appearance: textfield; }
+    .field { display: block; width: 100%; min-width: 0; height: 23px; padding: 2px 4px; border: 2px inset #fff; border-radius: 0; outline: none; color: #000; background: #fff; text-align: right; appearance: textfield; -moz-appearance: textfield; }
     .field::-webkit-inner-spin-button, .field::-webkit-outer-spin-button { margin: 0; appearance: none; -webkit-appearance: none; }
     .field.name { min-width: 0; max-width: none; text-align: left; }
     .field:focus { outline: 1px dotted #000080; outline-offset: -4px; }
@@ -70,7 +71,7 @@
       align-items: center;
       gap: 6px;
       padding: 2px 6px;
-      border: 2px outset #f4f4f4;
+      border: 2px outset #fff;
       border-radius: 0;
       color: #000;
       background: #c0c0c0;
@@ -79,35 +80,33 @@
     }
     .add-row:active, .text-button:active, .remove:active { border-style: inset; }
     .add-row span { display: inline-grid; width: 14px; height: 14px; place-items: center; border: 1px solid #555; line-height: 1; }
-    .remove { display: inline-flex; width: 23px; height: 23px; align-items: center; justify-content: center; padding: 0; border: 2px outset #f4f4f4; border-radius: 0; color: #000; background: #c0c0c0; line-height: 1; }
+    .remove { display: inline-flex; width: 23px; height: 23px; align-items: center; justify-content: center; padding: 0; border: 2px outset #fff; border-radius: 0; color: #000; background: #c0c0c0; line-height: 1; }
     .weight-block { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px 14px; margin: 0 2px 2px; padding: 9px; border: 1px solid #808080; background: var(--face-light); }
     .weight-item { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-width: 0; }
     .weight-item label { display: block; font-weight: normal; }
     .weight-item small { display: block; margin-top: 3px; }
     .weight-input { display: flex; align-items: center; gap: 6px; }
-    .weight-input input { width: 82px; height: 23px; padding: 2px 4px; border: 2px inset #ddd; border-radius: 0; background: #fff; text-align: right; }
+    .weight-input input { width: 82px; height: 23px; padding: 2px 4px; border: 2px inset #fff; border-radius: 0; background: #fff; text-align: right; }
     #tare-weight:out-of-range { outline: 1px solid #d00; }
     .weight-summary { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 0; padding-top: 6px; border-top: 1px solid #999; }
     .net-weight { margin: 0; }
     .weight-change { display: block; }
     .weight-change strong { font-weight: normal; }
     .right-col { display: grid; gap: 12px; }
+    .portion-card, .formula-card { display: none; }
     .result-card { color: #000; background: var(--face); }
     .portion-card {
       border: 1px solid #808080;
       background-color: var(--face);
-      background-image: linear-gradient(rgba(212, 208, 200, 0.88), rgba(212, 208, 200, 0.88)), url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFgAAABYCAYAAABxlTA0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAASqSURBVHhe7ZuxUuswEEUpqCihoeJv+CcqZqDio/gYeoahoc/LgXfz9i0rWyYOWTt7Z87YSLK0upFsWQlnpVKpVCqVSqVSqVQqlUqlUlObzWbRpFcU9BhcdnFxMStfocTtDZFeUdBjcNkh8O30kF5R0GNw2fn5+X/m7IPq8u30kF5R0GPMaS6c/C1CBgDm+vy5UBtweXm5TYrLWdIrCtpDZym6z1TugfrVxvX19TYpLmdJryhozxxP+x6oW21cXV1tk+JylvSKgoaPj4/t4ev85ubmc2Qd2mC1AbRpY2iRXlHQ9/f3OzPh9fV1m/y93CF5f3/ftU8sxOTLQHpFQdMZsoBRRWd9mUMjg3VfXp3BdIpsOIbBb29vu/ZXYTAdeHx83Dw8PHzCudJU5jfh/kv7xMJRsSgufejpRZD+fncsU4fAaPtcWJTBmo66LdAZ0jNBTDZGPXjTiyAJVoEP3e+OCbOK+MRibxFZDSYmDQJg1pGeXgS5BIO5RZTBB8SOYI6LNjjjKuLp6WkXIyzKYK0iwE5DneuB8pvYmHw8sNgRHHGMvYjIYMuqDM4ygi2rNri1jdizvehng4zy1560wT7fMvSAZCVAGXsvtX/bsqsyuNWZ1kPOlvEMLfFkcAtblhFNmv8wxCoMFn5a+3zLXAZHs2qxqwhv8O3t7W7LEliDYg5pnLdGFexjMG1RRu3qbyAmW3ZRBtvRgnl+N41vla2phzDY18nWpL+WNMrBog32Jslgb0LETw32+N9FLHovwt4iWgYr36INcI0szu/u7j6/DY6WbNRLOcr7WeHxButa5a/eYHXWT2VGGmkR3FNt2dYHBydvsPBGMIIxMyrr6+XHJVE5GDN4Ud9o7GOw/wUO1/YaPOWDW7TB6gDTW2hpZpdowLldPvlp//z8vCtnRzPm+LKqO0J12Dapj2s418tPetkOCzpCFmBMzx5DBCZolGI0RvkyLTSraB8w2peB9IqCpjN2OuqBMhVvcMukCNq0MfjRL9IrCprOkCV+ajD3SYzVKKwR/Bc/gjnHKJmlc+BXkP76iOg2w2+AbV0W337rw0mvKGhvcAT54J/2U9AyzbcV/b0qg+mM7ySQZtM57/2hdAQj2NbfYnUGR7cI+7fSOPb+1D/CG+zbsOmrHcEcteYUpCtP53Ng2+ABSRptnKTB6jjnP8HWrzTbhgxWmdUaDH6ZpnQxxeihsrYNLdNg9Qa/vLxsk//lk6blFKuIKQYLrrF1kGbbOCmDtbHSQuWmQP3+1mM5KYP9LcJijehFdffWu1qDmb4UmdNg+8ENjWDyVHZ1BrPlyH4E62E6pqO2DH15lZ1CZBh1ky5UL0di8uUhvaKgPf6V1ufPBfWrjd43xPSKgvZopSB8/lxYg0/qn8HtCD6kwWqDY+8mUnpFQUfY7UYu4wGIGfvuRdi1tM3r/RYlvaKgW6jTXAaY0jvSIvSCIXx+D+kVBT0Gl02dyhFzPDzTKwp6DC4Tc4zgMngA+0IwlaEXmF7SKwp6ChhMNVPQB1IGdzDFYBmrV/ChV+Ve0isKegpsZWLYFGT02C5dD+kVBb0kSqVSqVQqlUqlUqlUKpVKpYbOzv4AV/bIs90d0eUAAAAASUVORK5CYII=");
+      background-image: linear-gradient(rgba(224, 220, 212, 0.88), rgba(224, 220, 212, 0.88)), url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFgAAABYCAYAAABxlTA0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAASqSURBVHhe7ZuxUuswEEUpqCihoeJv+CcqZqDio/gYeoahoc/LgXfz9i0rWyYOWTt7Z87YSLK0upFsWQlnpVKpVCqVSqVSqVQqlUqlUlObzWbRpFcU9BhcdnFxMStfocTtDZFeUdBjcNkh8O30kF5R0GNw2fn5+X/m7IPq8u30kF5R0GPMaS6c/C1CBgDm+vy5UBtweXm5TYrLWdIrCtpDZym6z1TugfrVxvX19TYpLmdJryhozxxP+x6oW21cXV1tk+JylvSKgoaPj4/t4ev85ubmc2Qd2mC1AbRpY2iRXlHQ9/f3OzPh9fV1m/y93CF5f3/ftU8sxOTLQHpFQdMZsoBRRWd9mUMjg3VfXp3BdIpsOIbBb29vu/ZXYTAdeHx83Dw8PHzCudJU5jfh/kv7xMJRsSgufejpRZD+fncsU4fAaPtcWJTBmo66LdAZ0jNBTDZGPXjTiyAJVoEP3e+OCbOK+MRibxFZDSYmDQJg1pGeXgS5BIO5RZTBB8SOYI6LNjjjKuLp6WkXIyzKYK0iwE5DneuB8pvYmHw8sNgRHHGMvYjIYMuqDM4ygi2rNri1jdizvehng4zy1560wT7fMvSAZCVAGXsvtX/bsqsyuNWZ1kPOlvEMLfFkcAtblhFNmv8wxCoMFn5a+3zLXAZHs2qxqwhv8O3t7W7LEliDYg5pnLdGFexjMG1RRu3qbyAmW3ZRBtvRgnl+N41vla2phzDY18nWpL+WNMrBog32Jslgb0LETw32+N9FLHovwt4iWgYr36INcI0szu/u7j6/DY6WbNRLOcr7WeHxButa5a/eYHXWT2VGGmkR3FNt2dYHBydvsPBGMIIxMyrr6+XHJVE5GDN4Ud9o7GOw/wUO1/YaPOWDW7TB6gDTW2hpZpdowLldPvlp//z8vCtnRzPm+LKqO0J12Dapj2s418tPetkOCzpCFmBMzx5DBCZolGI0RvkyLTSraB8w2peB9IqCpjN2OuqBMhVvcMukCNq0MfjRL9IrCprOkCV+ajD3SYzVKKwR/Bc/gjnHKJmlc+BXkP76iOg2w2+AbV0W337rw0mvKGhvcAT54J/2U9AyzbcV/b0qg+mM7ySQZtM57/2hdAQj2NbfYnUGR7cI+7fSOPb+1D/CG+zbsOmrHcEcteYUpCtP53Ng2+ABSRptnKTB6jjnP8HWrzTbhgxWmdUaDH6ZpnQxxeihsrYNLdNg9Qa/vLxsk//lk6blFKuIKQYLrrF1kGbbOCmDtbHSQuWmQP3+1mM5KYP9LcJijehFdffWu1qDmb4UmdNg+8ENjWDyVHZ1BrPlyH4E62E6pqO2DH15lZ1CZBh1ky5UL0di8uUhvaKgPf6V1ufPBfWrjd43xPSKgvZopSB8/lxYg0/qn8HtCD6kwWqDY+8mUnpFQUfY7UYu4wGIGfvuRdi1tM3r/RYlvaKgW6jTXAaY0jvSIvSCIXx+D+kVBT0Gl02dyhFzPDzTKwp6DC4Tc4zgMngA+0IwlaEXmF7SKwp6ChhMNVPQB1IGdzDFYBmrV/ChV+Ve0isKegpsZWLYFGT02C5dD+kVBb0kSqVSqVQqlUqlUqlUKpVKpYbOzv4AV/bIs90d0eUAAAAASUVORK5CYII=");
       background-repeat: repeat;
       background-size: 88px 88px;
     }
-    .portion-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
-    .portion-head strong { color: var(--muted); font-weight: normal; }
     .portion-control { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-bottom: 8px; border-bottom: 1px solid #aaa; }
     .portion-hint { margin: 7px 0; color: var(--muted); }
-    .result-card .macro { border: 1px solid #fff; color: #fff; background: #000080; }
-    .portion-card .macro { border: 1px solid #808080; color: #000; background-color: var(--face-light); background-image: linear-gradient(rgba(212, 208, 200, 0.92), rgba(212, 208, 200, 0.92)), url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFgAAABYCAYAAABxlTA0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAASqSURBVHhe7ZuxUuswEEUpqCihoeJv+CcqZqDio/gYeoahoc/LgXfz9i0rWyYOWTt7Z87YSLK0upFsWQlnpVKpVCqVSqVSqVQqlUqlUlObzWbRpFcU9BhcdnFxMStfocTtDZFeUdBjcNkh8O30kF5R0GNw2fn5+X/m7IPq8u30kF5R0GPMaS6c/C1CBgDm+vy5UBtweXm5TYrLWdIrCtpDZym6z1TugfrVxvX19TYpLmdJryhozxxP+x6oW21cXV1tk+JylvSKgoaPj4/t4ev85ubmc2Qd2mC1AbRpY2iRXlHQ9/f3OzPh9fV1m/y93CF5f3/ftU8sxOTLQHpFQdMZsoBRRWd9mUMjg3VfXp3BdIpsOIbBb29vu/ZXYTAdeHx83Dw8PHzCudJU5jfh/kv7xMJRsSgufejpRZD+fncsU4fAaPtcWJTBmo66LdAZ0jNBTDZGPXjTiyAJVoEP3e+OCbOK+MRibxFZDSYmDQJg1pGeXgS5BIO5RZTBB8SOYI6LNjjjKuLp6WkXIyzKYK0iwE5DneuB8pvYmHw8sNgRHHGMvYjIYMuqDM4ygi2rNri1jdizvehng4zy1560wT7fMvSAZCVAGXsvtX/bsqsyuNWZ1kPOlvEMLfFkcAtblhFNmv8wxCoMFn5a+3zLXAZHs2qxqwhv8O3t7W7LEliDYg5pnLdGFexjMG1RRu3qbyAmW3ZRBtvRgnl+N41vla2phzDY18nWpL+WNMrBog32Jslgb0LETw32+N9FLHovwt4iWgYr36INcI0szu/u7j6/DY6WbNRLOcr7WeHxButa5a/eYHXWT2VGGmkR3FNt2dYHBydvsPBGMIIxMyrr6+XHJVE5GDN4Ud9o7GOw/wUO1/YaPOWDW7TB6gDTW2hpZpdowLldPvlp//z8vCtnRzPm+LKqO0J12Dapj2s418tPetkOCzpCFmBMzx5DBCZolGI0RvkyLTSraB8w2peB9IqCpjN2OuqBMhVvcMukCNq0MfjRL9IrCprOkCV+ajD3SYzVKKwR/Bc/gjnHKJmlc+BXkP76iOg2w2+AbV0W337rw0mvKGhvcAT54J/2U9AyzbcV/b0qg+mM7ySQZtM57/2hdAQj2NbfYnUGR7cI+7fSOPb+1D/CG+zbsOmrHcEcteYUpCtP53Ng2+ABSRptnKTB6jjnP8HWrzTbhgxWmdUaDH6ZpnQxxeihsrYNLdNg9Qa/vLxsk//lk6blFKuIKQYLrrF1kGbbOCmDtbHSQuWmQP3+1mM5KYP9LcJijehFdffWu1qDmb4UmdNg+8ENjWDyVHZ1BrPlyH4E62E6pqO2DH15lZ1CZBh1ky5UL0di8uUhvaKgPf6V1ufPBfWrjd43xPSKgvZopSB8/lxYg0/qn8HtCD6kwWqDY+8mUnpFQUfY7UYu4wGIGfvuRdi1tM3r/RYlvaKgW6jTXAaY0jvSIvSCIXx+D+kVBT0Gl02dyhFzPDzTKwp6DC4Tc4zgMngA+0IwlaEXmF7SKwp6ChhMNVPQB1IGdzDFYBmrV/ChV+Ve0isKegpsZWLYFGT02C5dD+kVBb0kSqVSqVQqlUqlUqlUKpVKpYbOzv4AV/bIs90d0eUAAAAASUVORK5CYII="); background-repeat: repeat; background-size: 88px 88px; }
-    .result-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-bottom: 8px; border-bottom: 1px solid #777; }
-    .result-heading h2 { margin: 0; }
+    .result-card .macro { border: 0; color: #fff; background: #000080; }
+    .portion-card .macro { border: 0; color: #000; background-color: var(--face-light); background-image: linear-gradient(rgba(224, 220, 212, 0.92), rgba(224, 220, 212, 0.92)), url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFgAAABYCAYAAABxlTA0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAASqSURBVHhe7ZuxUuswEEUpqCihoeJv+CcqZqDio/gYeoahoc/LgXfz9i0rWyYOWTt7Z87YSLK0upFsWQlnpVKpVCqVSqVSqVQqlUqlUlObzWbRpFcU9BhcdnFxMStfocTtDZFeUdBjcNkh8O30kF5R0GNw2fn5+X/m7IPq8u30kF5R0GPMaS6c/C1CBgDm+vy5UBtweXm5TYrLWdIrCtpDZym6z1TugfrVxvX19TYpLmdJryhozxxP+x6oW21cXV1tk+JylvSKgoaPj4/t4ev85ubmc2Qd2mC1AbRpY2iRXlHQ9/f3OzPh9fV1m/y93CF5f3/ftU8sxOTLQHpFQdMZsoBRRWd9mUMjg3VfXp3BdIpsOIbBb29vu/ZXYTAdeHx83Dw8PHzCudJU5jfh/kv7xMJRsSgufejpRZD+fncsU4fAaPtcWJTBmo66LdAZ0jNBTDZGPXjTiyAJVoEP3e+OCbOK+MRibxFZDSYmDQJg1pGeXgS5BIO5RZTBB8SOYI6LNjjjKuLp6WkXIyzKYK0iwE5DneuB8pvYmHw8sNgRHHGMvYjIYMuqDM4ygi2rNri1jdizvehng4zy1560wT7fMvSAZCVAGXsvtX/bsqsyuNWZ1kPOlvEMLfFkcAtblhFNmv8wxCoMFn5a+3zLXAZHs2qxqwhv8O3t7W7LEliDYg5pnLdGFexjMG1RRu3qbyAmW3ZRBtvRgnl+N41vla2phzDY18nWpL+WNMrBog32Jslgb0LETw32+N9FLHovwt4iWgYr36INcI0szu/u7j6/DY6WbNRLOcr7WeHxButa5a/eYHXWT2VGGmkR3FNt2dYHBydvsPBGMIIxMyrr6+XHJVE5GDN4Ud9o7GOw/wUO1/YaPOWDW7TB6gDTW2hpZpdowLldPvlp//z8vCtnRzPm+LKqO0J12Dapj2s418tPetkOCzpCFmBMzx5DBCZolGI0RvkyLTSraB8w2peB9IqCpjN2OuqBMhVvcMukCNq0MfjRL9IrCprOkCV+ajD3SYzVKKwR/Bc/gjnHKJmlc+BXkP76iOg2w2+AbV0W337rw0mvKGhvcAT54J/2U9AyzbcV/b0qg+mM7ySQZtM57/2hdAQj2NbfYnUGR7cI+7fSOPb+1D/CG+zbsOmrHcEcteYUpCtP53Ng2+ABSRptnKTB6jjnP8HWrzTbhgxWmdUaDH6ZpnQxxeihsrYNLdNg9Qa/vLxsk//lk6blFKuIKQYLrrF1kGbbOCmDtbHSQuWmQP3+1mM5KYP9LcJijehFdffWu1qDmb4UmdNg+8ENjWDyVHZ1BrPlyH4E62E6pqO2DH15lZ1CZBh1ky5UL0di8uUhvaKgPf6V1ufPBfWrjd43xPSKgvZopSB8/lxYg0/qn8HtCD6kwWqDY+8mUnpFQUfY7UYu4wGIGfvuRdi1tM3r/RYlvaKgW6jTXAaY0jvSIvSCIXx+D+kVBT0Gl02dyhFzPDzTKwp6DC4Tc4zgMngA+0IwlaEXmF7SKwp6ChhMNVPQB1IGdzDFYBmrV/ChV+Ve0isKegpsZWLYFGT02C5dD+kVBb0kSqVSqVQqlUqlUqlUKpVKpYbOzv4AV/bIs90d0eUAAAAASUVORK5CYII="); background-repeat: repeat; background-size: 88px 88px; }
+    .result-context { font-weight: normal; }
     .badge { padding: 2px 5px; border: 1px solid #fff; background: #008080; white-space: nowrap; }
     .macros { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 5px; }
     .macro { padding: 7px 5px; border: 1px solid #808080; color: #000; background: var(--face-light); text-align: center; }
@@ -117,7 +116,9 @@
     .formula-card { color: #000; background: var(--face); }
     .formula { padding: 9px; border: 0; color: #000; background: transparent; text-align: center; }
     .loss { display: flex; justify-content: space-between; gap: 8px; margin-top: 9px; padding-top: 7px; border-top: 1px solid #999; }
-    .notice { display: none; margin: 9px 2px 2px; padding: 7px; border: 1px solid #999; color: #800; background: #fff0f0; white-space: pre-line; }
+    .notice { display: none; margin: 9px 2px 2px; padding: 7px; border: 1px solid #999; color: #800; background: #fff0f0; }
+    .notice ul { margin: 0; padding-left: 1.25em; }
+    .notice li + li { margin-top: 3px; }
     .notice.warning { color: #665000; background: #fff8cc; }
     .notice.show { display: block; }
     @media (max-width: 1100px) {
@@ -132,16 +133,17 @@
       body { padding: 5px; }
       .page { margin: 5px auto; padding: 7px; }
       .card { padding: 8px; }
+      .group-card { padding: 4px 8px 8px; }
       .macros { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .table-wrap { overflow: visible; }
       table { min-width: 0; table-layout: auto; }
       thead { display: none; }
       tbody { display: grid; gap: 6px; }
-      tbody tr { position: relative; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px 5px; padding: 7px; border: 2px inset #ddd; background: var(--face-light); }
+      tbody tr { position: relative; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px 5px; padding: 7px 0; border: 0; border-bottom: 1px solid var(--line); background: transparent; }
       tbody td { display: flex; min-width: 0; width: auto; flex-direction: column; align-items: stretch; gap: 3px; padding: 0; text-align: left; }
       tbody td::before { min-width: 0; overflow: hidden; content: attr(data-label); white-space: nowrap; }
       tbody td:first-child { grid-column: 1 / -1; width: auto; padding-right: 32px; }
-      tbody td:last-child { position: absolute; top: 7px; right: 0; display: block; padding: 0; }
+      tbody td:last-child { position: absolute; top: 7px; right: -7px; display: block; padding: 0; }
       tbody td[data-label=""]::before { display: none; }
       .field, .field.name { width: 100%; min-width: 0; height: 23px; }
       .remove { width: 23px; height: 23px; }
@@ -158,8 +160,8 @@
 <body>
   <main class="page">
     <div class="layout">
-      <section class="card recipe-card" aria-label="Состав блюда">
-        <h2 class="ingredients-title">Ингредиенты</h2>
+      <fieldset class="card recipe-card group-card">
+        <legend class="group-title">Ингредиенты</legend>
         <div class="table-wrap">
           <table aria-label="Ингредиенты и их пищевая ценность">
             <thead><tr><th>Название</th><th>Масса, г</th><th>Ккал/100 г</th><th>Б, г</th><th>Ж, г</th><th>У, г</th><th aria-label="Удалить"></th></tr></thead>
@@ -175,7 +177,7 @@
         </div>
         <div class="weight-block">
           <div class="weight-item">
-            <div><label for="cooked-weight">Вес</label></div>
+            <div><label for="cooked-weight">Вес блюда с тарой</label></div>
             <div class="weight-input"><input id="cooked-weight" type="number" min="0" step="1" inputmode="decimal" value="0" aria-label="Вес блюда вместе с тарой в граммах"><span class="unit">г</span></div>
           </div>
           <div class="weight-item">
@@ -188,11 +190,11 @@
           </div>
         </div>
         <div class="notice" id="notice" role="status"></div>
-      </section>
+      </fieldset>
 
       <aside class="right-col">
-        <section class="card result-card" aria-labelledby="result-title" aria-live="polite">
-          <div class="result-heading"><h2 id="result-title">На 100 г готового блюда</h2><span class="badge">с учётом ужарки</span></div>
+        <fieldset class="card result-card group-card" aria-labelledby="result-title" aria-live="polite">
+          <legend class="group-title result-title" id="result-title">На 100 г готового блюда с учётом ужарки</legend>
           <div class="macros">
             <div class="macro"><span class="value" id="out-kcal">—</span><span class="label">Ккал</span></div>
             <div class="macro"><span class="value" id="out-protein">—</span><span class="label">Белки, г</span></div>
@@ -200,10 +202,10 @@
             <div class="macro"><span class="value" id="out-carbs">—</span><span class="label">Углеводы, г</span></div>
           </div>
           <div class="batch-row"><span>На всё блюдо</span><strong id="batch-kcal">— ккал</strong></div>
-        </section>
+        </fieldset>
 
-        <section class="card portion-card" aria-label="КБЖУ на порцию">
-          <div class="portion-head"><strong>На порцию</strong></div>
+        <fieldset class="card portion-card group-card">
+          <legend class="group-title">На порцию</legend>
           <div class="portion-control">
             <label for="portion-weight">Вес порции</label>
             <div class="weight-input"><input id="portion-weight" type="number" min="0" step="1" inputmode="decimal" value="0" aria-label="Вес порции в граммах"><span class="unit">г</span></div>
@@ -215,11 +217,12 @@
             <div class="macro"><span class="value" id="portion-fat">—</span><span class="label">Жиры, г</span></div>
             <div class="macro"><span class="value" id="portion-carbs">—</span><span class="label">Углеводы, г</span></div>
           </div>
-        </section>
+        </fieldset>
 
-        <section class="card formula-card" aria-label="Формула расчёта">
+        <fieldset class="card formula-card group-card">
+          <legend class="group-title">Формула расчёта</legend>
           <div class="formula">КБЖУ на 100 г = Σ (КБЖУ ингредиента × масса) ÷ вес готового блюда</div>
-        </section>
+        </fieldset>
       </aside>
     </div>
   </main>
@@ -350,7 +353,16 @@
         if (ready && totals.kcal / finalWeight * 100 > 900) {
           messages.push(`Готовое блюдо: высокая калорийность — ${fmt(totals.kcal / finalWeight * 100)} ккал/100 г. Проверьте вес и исходные данные.`);
         }
-        notice.textContent = messages.map(message => `• ${message}`).join('\n');
+        notice.replaceChildren();
+        if (messages.length) {
+          const list = document.createElement('ul');
+          for (const message of messages) {
+            const item = document.createElement('li');
+            item.textContent = message;
+            list.append(item);
+          }
+          notice.append(list);
+        }
         notice.classList.toggle('show', messages.length > 0);
         notice.classList.toggle('warning', messages.length > 0 && messages.length === errorCount);
       }

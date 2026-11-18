@@ -9,15 +9,9 @@
     :root {
       color-scheme: light;
       --ink: #000;
-      --muted: #404040;
       --line: #808080;
-      --paper: #fff;
       --face: #e0dcd4;
-      --face-light: #e0dcd4;
       --canvas: #008080;
-      --green: #000080;
-      --green-soft: #d8ffff;
-      --orange: #ff0;
       font-family: "MS Sans Serif", "Microsoft Sans Serif", Tahoma, Arial, sans-serif;
       font-size: 13px;
       line-height: normal;
@@ -44,13 +38,11 @@
       padding: 12px;
       border: 2px outset #fff;
       background: var(--face);
-      box-shadow: none;
     }
     .layout { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(280px, .8fr); align-items: start; gap: 12px; }
-    .card { min-width: 0; padding: 12px; border: 1px solid #808080; background: var(--face-light); box-shadow: none; }
+    .card { min-width: 0; padding: 12px; border: 1px solid #808080; background: var(--face); }
     .group-card { min-inline-size: 0; margin: 0; padding: 4px 12px 12px; border: 1px solid #808080; }
     .group-title { margin-bottom: 8px; padding: 0 5px; font-weight: bold; }
-    .recipe-card { overflow: visible; }
     .table-wrap { max-width: 100%; overflow: visible; }
     table { width: 100%; min-width: 0; border-collapse: collapse; table-layout: fixed; }
     th { overflow: hidden; padding: 7px 5px; border: 1px solid #fff; color: #fff; background: #000080; text-align: right; white-space: nowrap; }
@@ -63,6 +55,7 @@
     .field.name { min-width: 0; max-width: none; text-align: left; }
     .field:focus { outline: 1px dotted #000080; outline-offset: -4px; }
     .field:out-of-range { border-color: #d00; background: #fff0f0; }
+    .field.incomplete { border-color: #a88c33; background: #fff8cc; }
     .table-actions { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 8px 2px 12px; }
     .table-actions-secondary { display: flex; gap: 8px; }
     .add-row, .text-button {
@@ -81,41 +74,110 @@
     .add-row:active, .text-button:active, .remove:active { border-style: inset; }
     .add-row span { display: inline-grid; width: 14px; height: 14px; place-items: center; border: 1px solid #555; line-height: 1; }
     .remove { display: inline-flex; width: 23px; height: 23px; align-items: center; justify-content: center; padding: 0; border: 2px outset #fff; border-radius: 0; color: #000; background: #c0c0c0; line-height: 1; }
-    .weight-block { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px 14px; margin: 0 2px 2px; padding: 9px; border: 1px solid #808080; background: var(--face-light); }
+    .weight-block { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px 14px; margin: 0 2px 2px; padding: 9px; border: 1px solid #808080; background: var(--face); }
     .weight-item { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-width: 0; }
     .weight-item label { display: block; font-weight: normal; }
-    .weight-item small { display: block; margin-top: 3px; }
     .weight-input { display: flex; align-items: center; gap: 6px; }
     .weight-input input { width: 82px; height: 23px; padding: 2px 4px; border: 2px inset #fff; border-radius: 0; background: #fff; text-align: right; }
+    .tare-presets { grid-column: 1 / -1; display: grid; gap: 5px; }
+    .tare-presets label { font-weight: normal; }
+    .tare-preset-controls { position: relative; }
+    .tare-menu-toggle { display: flex; width: 100%; min-height: 23px; align-items: center; justify-content: space-between; gap: 8px; padding: 2px 3px 2px 5px; border: 2px inset #fff; border-radius: 0; background: #fff; color: #000; text-align: left; }
+    .tare-menu-toggle::after { display: grid; flex: 0 0 18px; height: 19px; place-items: center; border: 2px outset #fff; background: #c0c0c0; content: "▼"; }
+    .tare-menu { position: absolute; z-index: 5; top: calc(100% + 2px); right: 0; left: 0; max-height: 220px; overflow-y: auto; padding: 2px; border: 2px outset #fff; background: #c0c0c0; box-shadow: 2px 2px 0 #404040; }
+    .tare-menu[hidden] { display: none; }
+    .tare-option { display: flex; align-items: stretch; gap: 2px; padding: 1px; }
+    .tare-option + .tare-option { border-top: 1px solid #808080; }
+    .tare-option[aria-selected="true"] .tare-option-select { background: #000080; color: #fff; }
+    .tare-option-select { flex: 1; min-width: 0; padding: 4px; border: 1px solid transparent; background: transparent; color: #000; text-align: left; }
+    .tare-option-select:hover, .tare-option-select:focus-visible { border-color: #000080; }
+    .tare-option-delete { flex: 0 0 23px; min-height: 23px; padding: 0; border: 2px outset #fff; border-radius: 0; background: #c0c0c0; color: #000; line-height: 1; }
+    .tare-option-delete:active { border-style: inset; }
+    .tare-option-add { flex: 0 0 23px; min-height: 23px; padding: 0; border: 2px outset #fff; border-radius: 0; background: #c0c0c0; color: #000; font: inherit; line-height: 1; }
+    .tare-option-add:active { border-style: inset; }
+    .tare-option-add:disabled { color: #808080; cursor: default; }
+    .tare-dialog { width: min(360px, calc(100vw - 24px)); padding: 0; border: 2px outset #fff; border-radius: 0; background: var(--face); color: #000; }
+    .tare-dialog::backdrop { background: rgba(0, 0, 0, .35); }
+    .tare-dialog-form { padding: 8px; }
+    .tare-dialog-title { margin: -8px -8px 10px; padding: 5px 8px; background: #000080; color: #fff; font-weight: bold; }
+    .tare-dialog-weight { margin: 0 0 8px; }
+    .tare-name { display: block; width: 100%; height: 23px; margin-top: 4px; padding: 2px 4px; border: 2px inset #fff; border-radius: 0; background: #fff; color: #000; font: inherit; }
+    .tare-dialog-actions { display: flex; justify-content: flex-end; gap: 6px; margin-top: 10px; }
+    .tare-confirm-message { margin: 0; }
     #tare-weight:out-of-range { outline: 1px solid #d00; }
     .weight-summary { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 0; padding-top: 6px; border-top: 1px solid #999; }
     .net-weight { margin: 0; }
     .weight-change { display: block; }
     .weight-change strong { font-weight: normal; }
-    .right-col { display: grid; gap: 12px; }
-    .portion-card, .formula-card { display: none; }
-    .result-card { color: #000; background: var(--face); }
-    .portion-card {
-      border: 1px solid #808080;
-      background-color: var(--face);
-      background-image: linear-gradient(rgba(224, 220, 212, 0.88), rgba(224, 220, 212, 0.88)), url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFgAAABYCAYAAABxlTA0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAASqSURBVHhe7ZuxUuswEEUpqCihoeJv+CcqZqDio/gYeoahoc/LgXfz9i0rWyYOWTt7Z87YSLK0upFsWQlnpVKpVCqVSqVSqVQqlUqlUlObzWbRpFcU9BhcdnFxMStfocTtDZFeUdBjcNkh8O30kF5R0GNw2fn5+X/m7IPq8u30kF5R0GPMaS6c/C1CBgDm+vy5UBtweXm5TYrLWdIrCtpDZym6z1TugfrVxvX19TYpLmdJryhozxxP+x6oW21cXV1tk+JylvSKgoaPj4/t4ev85ubmc2Qd2mC1AbRpY2iRXlHQ9/f3OzPh9fV1m/y93CF5f3/ftU8sxOTLQHpFQdMZsoBRRWd9mUMjg3VfXp3BdIpsOIbBb29vu/ZXYTAdeHx83Dw8PHzCudJU5jfh/kv7xMJRsSgufejpRZD+fncsU4fAaPtcWJTBmo66LdAZ0jNBTDZGPXjTiyAJVoEP3e+OCbOK+MRibxFZDSYmDQJg1pGeXgS5BIO5RZTBB8SOYI6LNjjjKuLp6WkXIyzKYK0iwE5DneuB8pvYmHw8sNgRHHGMvYjIYMuqDM4ygi2rNri1jdizvehng4zy1560wT7fMvSAZCVAGXsvtX/bsqsyuNWZ1kPOlvEMLfFkcAtblhFNmv8wxCoMFn5a+3zLXAZHs2qxqwhv8O3t7W7LEliDYg5pnLdGFexjMG1RRu3qbyAmW3ZRBtvRgnl+N41vla2phzDY18nWpL+WNMrBog32Jslgb0LETw32+N9FLHovwt4iWgYr36INcI0szu/u7j6/DY6WbNRLOcr7WeHxButa5a/eYHXWT2VGGmkR3FNt2dYHBydvsPBGMIIxMyrr6+XHJVE5GDN4Ud9o7GOw/wUO1/YaPOWDW7TB6gDTW2hpZpdowLldPvlp//z8vCtnRzPm+LKqO0J12Dapj2s418tPetkOCzpCFmBMzx5DBCZolGI0RvkyLTSraB8w2peB9IqCpjN2OuqBMhVvcMukCNq0MfjRL9IrCprOkCV+ajD3SYzVKKwR/Bc/gjnHKJmlc+BXkP76iOg2w2+AbV0W337rw0mvKGhvcAT54J/2U9AyzbcV/b0qg+mM7ySQZtM57/2hdAQj2NbfYnUGR7cI+7fSOPb+1D/CG+zbsOmrHcEcteYUpCtP53Ng2+ABSRptnKTB6jjnP8HWrzTbhgxWmdUaDH6ZpnQxxeihsrYNLdNg9Qa/vLxsk//lk6blFKuIKQYLrrF1kGbbOCmDtbHSQuWmQP3+1mM5KYP9LcJijehFdffWu1qDmb4UmdNg+8ENjWDyVHZ1BrPlyH4E62E6pqO2DH15lZ1CZBh1ky5UL0di8uUhvaKgPf6V1ufPBfWrjd43xPSKgvZopSB8/lxYg0/qn8HtCD6kwWqDY+8mUnpFQUfY7UYu4wGIGfvuRdi1tM3r/RYlvaKgW6jTXAaY0jvSIvSCIXx+D+kVBT0Gl02dyhFzPDzTKwp6DC4Tc4zgMngA+0IwlaEXmF7SKwp6ChhMNVPQB1IGdzDFYBmrV/ChV+Ve0isKegpsZWLYFGT02C5dD+kVBb0kSqVSqVQqlUqlUqlUKpVKpYbOzv4AV/bIs90d0eUAAAAASUVORK5CYII=");
-      background-repeat: repeat;
-      background-size: 88px 88px;
-    }
-    .portion-control { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-bottom: 8px; border-bottom: 1px solid #aaa; }
-    .portion-hint { margin: 7px 0; color: var(--muted); }
-    .result-card .macro { border: 0; color: #fff; background: #000080; }
-    .portion-card .macro { border: 0; color: #000; background-color: var(--face-light); background-image: linear-gradient(rgba(224, 220, 212, 0.92), rgba(224, 220, 212, 0.92)), url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFgAAABYCAYAAABxlTA0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAASqSURBVHhe7ZuxUuswEEUpqCihoeJv+CcqZqDio/gYeoahoc/LgXfz9i0rWyYOWTt7Z87YSLK0upFsWQlnpVKpVCqVSqVSqVQqlUqlUlObzWbRpFcU9BhcdnFxMStfocTtDZFeUdBjcNkh8O30kF5R0GNw2fn5+X/m7IPq8u30kF5R0GPMaS6c/C1CBgDm+vy5UBtweXm5TYrLWdIrCtpDZym6z1TugfrVxvX19TYpLmdJryhozxxP+x6oW21cXV1tk+JylvSKgoaPj4/t4ev85ubmc2Qd2mC1AbRpY2iRXlHQ9/f3OzPh9fV1m/y93CF5f3/ftU8sxOTLQHpFQdMZsoBRRWd9mUMjg3VfXp3BdIpsOIbBb29vu/ZXYTAdeHx83Dw8PHzCudJU5jfh/kv7xMJRsSgufejpRZD+fncsU4fAaPtcWJTBmo66LdAZ0jNBTDZGPXjTiyAJVoEP3e+OCbOK+MRibxFZDSYmDQJg1pGeXgS5BIO5RZTBB8SOYI6LNjjjKuLp6WkXIyzKYK0iwE5DneuB8pvYmHw8sNgRHHGMvYjIYMuqDM4ygi2rNri1jdizvehng4zy1560wT7fMvSAZCVAGXsvtX/bsqsyuNWZ1kPOlvEMLfFkcAtblhFNmv8wxCoMFn5a+3zLXAZHs2qxqwhv8O3t7W7LEliDYg5pnLdGFexjMG1RRu3qbyAmW3ZRBtvRgnl+N41vla2phzDY18nWpL+WNMrBog32Jslgb0LETw32+N9FLHovwt4iWgYr36INcI0szu/u7j6/DY6WbNRLOcr7WeHxButa5a/eYHXWT2VGGmkR3FNt2dYHBydvsPBGMIIxMyrr6+XHJVE5GDN4Ud9o7GOw/wUO1/YaPOWDW7TB6gDTW2hpZpdowLldPvlp//z8vCtnRzPm+LKqO0J12Dapj2s418tPetkOCzpCFmBMzx5DBCZolGI0RvkyLTSraB8w2peB9IqCpjN2OuqBMhVvcMukCNq0MfjRL9IrCprOkCV+ajD3SYzVKKwR/Bc/gjnHKJmlc+BXkP76iOg2w2+AbV0W337rw0mvKGhvcAT54J/2U9AyzbcV/b0qg+mM7ySQZtM57/2hdAQj2NbfYnUGR7cI+7fSOPb+1D/CG+zbsOmrHcEcteYUpCtP53Ng2+ABSRptnKTB6jjnP8HWrzTbhgxWmdUaDH6ZpnQxxeihsrYNLdNg9Qa/vLxsk//lk6blFKuIKQYLrrF1kGbbOCmDtbHSQuWmQP3+1mM5KYP9LcJijehFdffWu1qDmb4UmdNg+8ENjWDyVHZ1BrPlyH4E62E6pqO2DH15lZ1CZBh1ky5UL0di8uUhvaKgPf6V1ufPBfWrjd43xPSKgvZopSB8/lxYg0/qn8HtCD6kwWqDY+8mUnpFQUfY7UYu4wGIGfvuRdi1tM3r/RYlvaKgW6jTXAaY0jvSIvSCIXx+D+kVBT0Gl02dyhFzPDzTKwp6DC4Tc4zgMngA+0IwlaEXmF7SKwp6ChhMNVPQB1IGdzDFYBmrV/ChV+Ve0isKegpsZWLYFGT02C5dD+kVBb0kSqVSqVQqlUqlUqlUKpVKpYbOzv4AV/bIs90d0eUAAAAASUVORK5CYII="); background-repeat: repeat; background-size: 88px 88px; }
-    .result-context { font-weight: normal; }
-    .badge { padding: 2px 5px; border: 1px solid #fff; background: #008080; white-space: nowrap; }
+    .result-card .macro { color: #fff; background: #000080; }
     .macros { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 5px; }
-    .macro { padding: 7px 5px; border: 1px solid #808080; color: #000; background: var(--face-light); text-align: center; }
+    .macro { padding: 7px 5px; color: #000; background: var(--face); text-align: center; }
     .macro .value { display: block; font-weight: bold; }
     .macro .label { display: block; margin-top: 3px; }
+    .copy-value { display: block; width: 100%; padding: 0; border: 0; background: transparent; color: inherit; font: inherit; font-weight: bold; cursor: copy; }
+    .copy-value:hover { text-decoration: underline; }
+    .copy-value:focus-visible { outline: 1px dotted currentColor; outline-offset: 2px; }
+    .copy-value:disabled { cursor: default; opacity: .6; text-decoration: none; }
+    .copy-status { min-height: 1em; margin: 4px 0 0; text-align: right; }
+    .copy-status:empty { display: none; }
     .batch-row { display: flex; justify-content: space-between; gap: 8px; margin-top: 10px; padding-top: 8px; border-top: 1px solid #777; }
-    .formula-card { color: #000; background: var(--face); }
-    .formula { padding: 9px; border: 0; color: #000; background: transparent; text-align: center; }
+    .portion-card { margin-top: 10px; }
+    .portion-macros { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 5px; }
+    .portion-macro { display: flex; min-width: 0; flex-direction: column; gap: 3px; }
+    .portion-macro label { min-width: 0; overflow: hidden; white-space: nowrap; }
+    .portion-macro input { width: 100%; min-width: 0; height: 23px; padding: 2px 4px; border: 2px inset #fff; border-radius: 0; background: #fff; text-align: right; }
+    .portion-macro input:disabled { border-color: #aaa; background: var(--face); color: #808080; cursor: not-allowed; }
+    .energy-share-card, .contribution-card { margin-top: 10px; }
+    .analytics-toggle { display: flex; align-items: center; gap: 6px; margin: 8px 2px 0; cursor: pointer; }
+    .analytics-toggle input {
+      display: grid;
+      width: 14px;
+      height: 14px;
+      flex: 0 0 14px;
+      place-items: center;
+      margin: 0;
+      padding: 0;
+      appearance: none;
+      border: 2px inset #fff;
+      border-radius: 0;
+      background: #fff;
+    }
+    .analytics-toggle input:checked { background: #c0c0c0; }
+    .analytics-toggle input:checked::after {
+      width: 7px;
+      height: 4px;
+      border-bottom: 2px solid #000;
+      border-left: 2px solid #000;
+      content: "";
+      transform: translateY(-1px) rotate(-45deg);
+    }
+    .analytics-toggle input:focus-visible { outline: 1px dotted #000; outline-offset: 2px; }
+    .energy-share-note { margin: 0 0 7px; }
+    .energy-share-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; }
+    .energy-share { min-width: 0; padding: 6px 3px; border: 1px solid #999; background: #d6d2ca; text-align: center; }
+    .energy-share-percent { display: block; font-weight: bold; }
+    .energy-share .label { display: block; margin-top: 2px; }
+    .energy-share-kcal { display: block; margin-top: 3px; }
+    .energy-share-total { display: flex; justify-content: space-between; gap: 8px; margin: 8px 0 0; padding-top: 6px; border-top: 1px solid #999; }
     .loss { display: flex; justify-content: space-between; gap: 8px; margin-top: 9px; padding-top: 7px; border-top: 1px solid #999; }
+    .contribution-note { margin: 0 0 7px; }
+    .contribution-grid { display: grid; gap: 1px; }
+    .contribution-row { display: grid; grid-template-columns: minmax(0, 1.5fr) repeat(4, minmax(0, .7fr)); gap: 2px; align-items: stretch; }
+    .contribution-heading { padding: 4px 2px; border: 1px solid #fff; background: #000080; color: #fff; font-weight: bold; text-align: center; }
+    .contribution-heading:first-child { text-align: left; }
+    .contribution-name, .contribution-value { min-width: 0; padding: 4px 2px; overflow-wrap: anywhere; text-align: center; }
+    .contribution-name { text-align: left; }
+    .contribution-value { font-weight: bold; }
+    .contribution-value.level-low { background: #dce8f5; }
+    .contribution-value.level-mid { background: #a6c5e5; }
+    .contribution-value.level-high { background: #536c96; color: #fff; }
+    .contribution-empty { padding: 6px 2px; }
+    .contribution-legend { display: flex; flex-wrap: wrap; gap: 4px 8px; margin-top: 8px; }
+    .contribution-key { display: inline-flex; align-items: center; gap: 3px; }
+    .contribution-swatch { width: 12px; height: 12px; border: 1px solid #808080; background: #dce8f5; }
+    .contribution-swatch.none { background: transparent; }
+    .contribution-swatch.mid { background: #a6c5e5; }
+    .contribution-swatch.high { border-color: #536c96; background: #536c96; }
     .notice { display: none; margin: 9px 2px 2px; padding: 7px; border: 1px solid #999; color: #800; background: #fff0f0; }
     .notice ul { margin: 0; padding-left: 1.25em; }
     .notice li + li { margin-top: 3px; }
@@ -139,11 +201,15 @@
       table { min-width: 0; table-layout: auto; }
       thead { display: none; }
       tbody { display: grid; gap: 6px; }
-      tbody tr { position: relative; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px 5px; padding: 7px 0; border: 0; border-bottom: 1px solid var(--line); background: transparent; }
+      tbody tr { position: relative; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px 5px; padding: 5px 0 7px; border: 0; border-bottom: 1px solid var(--line); background: transparent; }
+      #ingredients tr:first-child { padding-top: 1px; }
+      #ingredients tr:last-child { border-bottom: 0; }
+      #ingredients { margin-top: -3px; }
       tbody td { display: flex; min-width: 0; width: auto; flex-direction: column; align-items: stretch; gap: 3px; padding: 0; text-align: left; }
       tbody td::before { min-width: 0; overflow: hidden; content: attr(data-label); white-space: nowrap; }
       tbody td:first-child { grid-column: 1 / -1; width: auto; padding-right: 32px; }
-      tbody td:last-child { position: absolute; top: 7px; right: -7px; display: block; padding: 0; }
+      tbody td:last-child { position: absolute; top: 5px; right: -7px; display: block; padding: 0; }
+      #ingredients tr:first-child td:last-child { top: 1px; }
       tbody td[data-label=""]::before { display: none; }
       .field, .field.name { width: 100%; min-width: 0; height: 23px; }
       .remove { width: 23px; height: 23px; }
@@ -160,7 +226,7 @@
 <body>
   <main class="page">
     <div class="layout">
-      <fieldset class="card recipe-card group-card">
+      <fieldset class="card group-card">
         <legend class="group-title">Ингредиенты</legend>
         <div class="table-wrap">
           <table aria-label="Ингредиенты и их пищевая ценность">
@@ -184,6 +250,13 @@
             <div><label for="tare-weight">Вес тары</label></div>
             <div class="weight-input"><input id="tare-weight" type="number" min="0" step="1" inputmode="decimal" value="0" aria-label="Вес тары в граммах"><span class="unit">г</span></div>
           </div>
+          <div class="tare-presets">
+            <label id="tare-preset-label">Сохранённая тара</label>
+            <div class="tare-preset-controls">
+              <button class="tare-menu-toggle" id="tare-menu-toggle" type="button" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="tare-preset-label tare-selected-name"><span id="tare-selected-name">Своя тара</span></button>
+              <div class="tare-menu" id="tare-menu" role="listbox" aria-labelledby="tare-preset-label" hidden></div>
+            </div>
+          </div>
           <div class="weight-summary">
             <p class="net-weight">Чистый вес блюда (вес − тара): <strong id="net-weight">0 г</strong></p>
             <div class="weight-change"><strong id="weight-change">—</strong></div>
@@ -192,37 +265,55 @@
         <div class="notice" id="notice" role="status"></div>
       </fieldset>
 
-      <aside class="right-col">
+      <aside>
         <fieldset class="card result-card group-card" aria-labelledby="result-title" aria-live="polite">
-          <legend class="group-title result-title" id="result-title">На 100 г готового блюда с учётом ужарки</legend>
+          <legend class="group-title" id="result-title">На 100 г готового блюда с учётом ужарки</legend>
           <div class="macros">
-            <div class="macro"><span class="value" id="out-kcal">—</span><span class="label">Ккал</span></div>
-            <div class="macro"><span class="value" id="out-protein">—</span><span class="label">Белки, г</span></div>
-            <div class="macro"><span class="value" id="out-fat">—</span><span class="label">Жиры, г</span></div>
-            <div class="macro"><span class="value" id="out-carbs">—</span><span class="label">Углеводы, г</span></div>
+            <div class="macro"><button class="value copy-value" id="out-kcal" type="button" data-copy-label="Ккал" aria-label="Скопировать значение ккал" title="Скопировать значение">—</button><span class="label">Ккал</span></div>
+            <div class="macro"><button class="value copy-value" id="out-protein" type="button" data-copy-label="Белки" aria-label="Скопировать значение белков" title="Скопировать значение">—</button><span class="label">Белки, г</span></div>
+            <div class="macro"><button class="value copy-value" id="out-fat" type="button" data-copy-label="Жиры" aria-label="Скопировать значение жиров" title="Скопировать значение">—</button><span class="label">Жиры, г</span></div>
+            <div class="macro"><button class="value copy-value" id="out-carbs" type="button" data-copy-label="Углеводы" aria-label="Скопировать значение углеводов" title="Скопировать значение">—</button><span class="label">Углеводы, г</span></div>
           </div>
+          <p class="copy-status" id="copy-status" aria-live="polite"></p>
           <div class="batch-row"><span>На всё блюдо</span><strong id="batch-kcal">— ккал</strong></div>
         </fieldset>
 
-        <fieldset class="card portion-card group-card">
-          <legend class="group-title">На порцию</legend>
-          <div class="portion-control">
-            <label for="portion-weight">Вес порции</label>
-            <div class="weight-input"><input id="portion-weight" type="number" min="0" step="1" inputmode="decimal" value="0" aria-label="Вес порции в граммах"><span class="unit">г</span></div>
-          </div>
-          <p class="portion-hint">КБЖУ пересчитаны на этот вес.</p>
-          <div class="macros">
-            <div class="macro"><span class="value" id="portion-kcal">—</span><span class="label">Ккал</span></div>
-            <div class="macro"><span class="value" id="portion-protein">—</span><span class="label">Белки, г</span></div>
-            <div class="macro"><span class="value" id="portion-fat">—</span><span class="label">Жиры, г</span></div>
-            <div class="macro"><span class="value" id="portion-carbs">—</span><span class="label">Углеводы, г</span></div>
+        <label class="analytics-toggle" for="show-analytics"><input id="show-analytics" type="checkbox"> Аналитика</label>
+
+        <fieldset class="card group-card portion-card" id="portion-card" aria-labelledby="portion-title" hidden>
+          <legend class="group-title" id="portion-title">КБЖУ на порцию</legend>
+          <div class="portion-macros">
+            <div class="portion-macro"><label for="portion-weight">Вес порции, г</label><input id="portion-weight" type="number" min="0" step="any" inputmode="decimal" value="0" aria-label="Вес порции, граммы"></div>
+            <div class="portion-macro"><label for="portion-kcal">Ккал</label><input id="portion-kcal" type="number" min="0" step="any" inputmode="decimal" placeholder="—" aria-label="Калорийность порции, килокалории"></div>
+            <div class="portion-macro"><label for="portion-protein">Белки, г</label><input id="portion-protein" type="number" min="0" step="any" inputmode="decimal" placeholder="—" aria-label="Белки на порцию, граммы"></div>
+            <div class="portion-macro"><label for="portion-fat">Жиры, г</label><input id="portion-fat" type="number" min="0" step="any" inputmode="decimal" placeholder="—" aria-label="Жиры на порцию, граммы"></div>
+            <div class="portion-macro"><label for="portion-carbs">Углеводы, г</label><input id="portion-carbs" type="number" min="0" step="any" inputmode="decimal" placeholder="—" aria-label="Углеводы на порцию, граммы"></div>
           </div>
         </fieldset>
 
-        <fieldset class="card formula-card group-card">
-          <legend class="group-title">Формула расчёта</legend>
-          <div class="formula">КБЖУ на 100 г = Σ (КБЖУ ингредиента × масса) ÷ вес готового блюда</div>
+        <fieldset class="card group-card energy-share-card" id="energy-share-card" aria-labelledby="energy-share-title">
+          <legend class="group-title" id="energy-share-title">Вклад БЖУ в калорийность</legend>
+          <p class="energy-share-note" id="energy-share-note">Доля от калорийности по формуле 4/9/4 ккал на грамм Б/Ж/У:</p>
+          <div class="energy-share-grid">
+            <div class="energy-share"><span class="energy-share-percent" id="protein-energy-share">—</span><span class="label">Белки</span><span class="energy-share-kcal"><strong id="protein-energy-kcal">—</strong> ккал</span></div>
+            <div class="energy-share"><span class="energy-share-percent" id="fat-energy-share">—</span><span class="label">Жиры</span><span class="energy-share-kcal"><strong id="fat-energy-kcal">—</strong> ккал</span></div>
+            <div class="energy-share"><span class="energy-share-percent" id="carbs-energy-share">—</span><span class="label">Углеводы</span><span class="energy-share-kcal"><strong id="carbs-energy-kcal">—</strong> ккал</span></div>
+          </div>
+          <p class="energy-share-total"><span>Всего по БЖУ на 100 г</span><strong id="bju-energy-total">— ккал</strong></p>
         </fieldset>
+
+        <fieldset class="card group-card contribution-card" id="contribution-card" aria-labelledby="contribution-title" hidden>
+          <legend class="group-title" id="contribution-title">Вклад ингредиентов</legend>
+          <p class="contribution-note">Доля каждого ингредиента в сумме показателей блюда:</p>
+          <div class="contribution-grid" id="contributions" role="table" aria-label="Доли ингредиентов в калориях и БЖУ"></div>
+          <div class="contribution-legend" aria-label="Интенсивность вклада">
+            <span class="contribution-key"><span class="contribution-swatch none"></span>до 10%</span>
+            <span class="contribution-key"><span class="contribution-swatch"></span>10–30%</span>
+            <span class="contribution-key"><span class="contribution-swatch mid"></span>30–60%</span>
+            <span class="contribution-key"><span class="contribution-swatch high"></span>больше 60%</span>
+          </div>
+        </fieldset>
+
       </aside>
     </div>
   </main>
@@ -230,14 +321,36 @@
   <template id="row-template">
     <tr>
       <td data-label=""><input class="field name" type="text" aria-label="Название ингредиента" placeholder="Например, рис"></td>
-      <td data-label="Масса, г"><input class="field amount" type="number" min="0" step="any" inputmode="decimal" value="0" aria-label="Масса ингредиента в граммах"></td>
-      <td data-label="Ккал/100 г"><input class="field kcal" type="number" min="0" step="any" inputmode="decimal" value="0" aria-label="Калорийность на 100 граммов"></td>
-      <td data-label="Белки, г"><input class="field protein" type="number" min="0" max="100" step="any" inputmode="decimal" value="0" aria-label="Белки на 100 граммов"></td>
-      <td data-label="Жиры, г"><input class="field fat" type="number" min="0" max="100" step="any" inputmode="decimal" value="0" aria-label="Жиры на 100 граммов"></td>
-      <td data-label="Углеводы, г"><input class="field carbs" type="number" min="0" max="100" step="any" inputmode="decimal" value="0" aria-label="Углеводы на 100 граммов"></td>
+      <td data-label="Масса, г"><input class="field amount" type="number" min="0" step="any" inputmode="decimal" aria-label="Масса ингредиента в граммах"></td>
+      <td data-label="Ккал/100 г"><input class="field kcal" type="number" min="0" step="any" inputmode="decimal" aria-label="Калорийность на 100 граммов"></td>
+      <td data-label="Белки, г"><input class="field protein" type="number" min="0" max="100" step="any" inputmode="decimal" aria-label="Белки на 100 граммов"></td>
+      <td data-label="Жиры, г"><input class="field fat" type="number" min="0" max="100" step="any" inputmode="decimal" aria-label="Жиры на 100 граммов"></td>
+      <td data-label="Углеводы, г"><input class="field carbs" type="number" min="0" max="100" step="any" inputmode="decimal" aria-label="Углеводы на 100 граммов"></td>
       <td><button class="remove" type="button" aria-label="Удалить ингредиент" title="Удалить">×</button></td>
     </tr>
   </template>
+  <dialog class="tare-dialog" id="tare-dialog" aria-labelledby="tare-dialog-title">
+    <form class="tare-dialog-form" id="tare-form">
+      <div class="tare-dialog-title" id="tare-dialog-title">Сохранить тару</div>
+      <p class="tare-dialog-weight">Вес: <strong id="tare-dialog-weight">0 г</strong></p>
+      <label for="tare-name">Название тары</label>
+      <input class="tare-name" id="tare-name" type="text" maxlength="40" required autocomplete="off">
+      <div class="tare-dialog-actions">
+        <button class="text-button" id="cancel-tare" type="button">Отмена</button>
+        <button class="text-button" id="confirm-tare" type="submit">Сохранить</button>
+      </div>
+    </form>
+  </dialog>
+  <dialog class="tare-dialog" id="tare-delete-dialog" aria-labelledby="tare-delete-title">
+    <div class="tare-dialog-form">
+      <div class="tare-dialog-title" id="tare-delete-title">Удалить тару?</div>
+      <p class="tare-confirm-message" id="tare-delete-message"></p>
+      <div class="tare-dialog-actions">
+        <button class="text-button" id="cancel-delete-tare" type="button">Отмена</button>
+        <button class="text-button" id="confirm-delete-tare" type="button">Удалить</button>
+      </div>
+    </div>
+  </dialog>
   <script>
     (() => {
       const body = document.querySelector('#ingredients');
@@ -245,9 +358,34 @@
       const cookedWeight = document.querySelector('#cooked-weight');
       const tareWeight = document.querySelector('#tare-weight');
       const portionWeight = document.querySelector('#portion-weight');
+      const portionOutputs = Object.fromEntries(['kcal', 'protein', 'fat', 'carbs'].map(key => [key, document.querySelector(`#portion-${key}`)]));
+      const portionCard = document.querySelector('#portion-card');
+      const tareMenuToggle = document.querySelector('#tare-menu-toggle');
+      const tareMenu = document.querySelector('#tare-menu');
+      const tareSelectedName = document.querySelector('#tare-selected-name');
+      const saveTareButton = document.createElement('button');
+      saveTareButton.id = 'save-tare';
+      saveTareButton.type = 'button';
+      const tareDialog = document.querySelector('#tare-dialog');
+      const tareForm = document.querySelector('#tare-form');
+      const tareNameInput = document.querySelector('#tare-name');
+      const tareDialogWeight = document.querySelector('#tare-dialog-weight');
+      const tareDeleteDialog = document.querySelector('#tare-delete-dialog');
+      const tareDeleteMessage = document.querySelector('#tare-delete-message');
+      let tareToDeleteId = '';
+      let selectedTarePresetId = '';
       const netWeight = document.querySelector('#net-weight');
       const notice = document.querySelector('#notice');
+      const contributions = document.querySelector('#contributions');
+      const contributionCard = document.querySelector('#contribution-card');
+      const analyticsToggle = document.querySelector('#show-analytics');
+      const energyShareCard = document.querySelector('#energy-share-card');
+      let analyticsPreferenceSet = false;
+      const copyStatus = document.querySelector('#copy-status');
+      let copyStatusTimer;
       const storageKey = 'kbju-complex-recipe-v1';
+      const tareStorageKey = 'kbju-tare-presets-v1';
+      let tarePresets = [];
       const example = [
         { name: 'Куриная грудка', amount: 1083, kcal: 116, protein: 20, fat: 4, carbs: 0 },
         { name: 'Мёд', amount: 17, kcal: 320, protein: 0, fat: 0, carbs: 80 },
@@ -256,6 +394,8 @@
       ];
       const read = (row, key) => Number(row.querySelector(`.${key}`).value) || 0;
       const fmt = value => new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 1 }).format(value).replace(/^-/, '−');
+      const nutritionLabels = { kcal: 'Ккал/100 г', protein: 'Белки, г', fat: 'Жиры, г', carbs: 'Углеводы, г' };
+      const ingredientValueLabels = { amount: 'Масса', kcal: 'Ккал/100 г', protein: 'Белки', fat: 'Жиры', carbs: 'Углеводы' };
 
       function save() {
         const state = {
@@ -264,7 +404,10 @@
           )),
           cookedWeight: cookedWeight.value,
           tareWeight: tareWeight.value,
-          portionWeight: portionWeight.value
+          portionWeight: portionWeight.value,
+          tarePresetId: selectedTarePresetId,
+          showAnalytics: analyticsToggle.checked,
+          analyticsPreferenceSet
         };
         try { localStorage.setItem(storageKey, JSON.stringify(state)); } catch (_) {}
       }
@@ -277,11 +420,121 @@
         return null;
       }
 
+      function loadTarePresets() {
+        try {
+          const saved = JSON.parse(localStorage.getItem(tareStorageKey));
+          if (Array.isArray(saved)) {
+            return saved.filter(item => item && typeof item.id === 'string' && typeof item.name === 'string' && Number.isFinite(Number(item.weight)) && Number(item.weight) > 0)
+              .map(item => ({ id: item.id, name: item.name, weight: Number(item.weight) }));
+          }
+        } catch (_) {}
+        return [];
+      }
+
+      function saveTarePresets() {
+        try { localStorage.setItem(tareStorageKey, JSON.stringify(tarePresets)); } catch (_) {}
+      }
+
+      function updateTareButtons() {
+        saveTareButton.disabled = !(Number(tareWeight.value) > 0);
+      }
+
+      function updateAnalyticsVisibility() {
+        portionCard.hidden = !analyticsToggle.checked;
+        energyShareCard.hidden = !analyticsToggle.checked;
+        const activeIngredients = [...body.querySelectorAll('tr')].filter(row => read(row, 'amount') > 0).length;
+        contributionCard.hidden = !analyticsToggle.checked || activeIngredients < 2;
+      }
+
+      function renderTarePresets(selectedId = selectedTarePresetId) {
+        selectedTarePresetId = tarePresets.some(preset => preset.id === selectedId) ? selectedId : '';
+        tareMenu.replaceChildren();
+        const customOption = document.createElement('div');
+        customOption.className = 'tare-option';
+        customOption.setAttribute('role', 'option');
+        customOption.setAttribute('aria-selected', String(!selectedTarePresetId));
+        const customButton = document.createElement('button');
+        customButton.className = 'tare-option-select';
+        customButton.type = 'button';
+        customButton.textContent = 'Своя тара';
+        customButton.addEventListener('click', () => selectTarePreset(''));
+        saveTareButton.className = 'tare-option-add';
+        saveTareButton.textContent = '+';
+        saveTareButton.setAttribute('aria-label', 'Сохранить текущую тару');
+        saveTareButton.title = 'Сохранить текущую тару';
+        customOption.append(customButton, saveTareButton);
+        tareMenu.append(customOption);
+        for (const preset of tarePresets) {
+          const option = document.createElement('div');
+          option.className = 'tare-option';
+          option.setAttribute('role', 'option');
+          option.setAttribute('aria-selected', String(preset.id === selectedTarePresetId));
+          const selectButton = document.createElement('button');
+          selectButton.className = 'tare-option-select';
+          selectButton.type = 'button';
+          selectButton.textContent = `${preset.name} — ${fmt(preset.weight)} г`;
+          selectButton.addEventListener('click', () => selectTarePreset(preset.id));
+          const deleteButton = document.createElement('button');
+          deleteButton.className = 'tare-option-delete';
+          deleteButton.type = 'button';
+          deleteButton.textContent = '×';
+          deleteButton.setAttribute('aria-label', `Удалить тару «${preset.name}»`);
+          deleteButton.title = `Удалить «${preset.name}»`;
+          deleteButton.addEventListener('click', () => requestDeleteTare(preset.id));
+          option.append(selectButton, deleteButton);
+          tareMenu.append(option);
+        }
+        const selected = tarePresets.find(preset => preset.id === selectedTarePresetId);
+        tareSelectedName.textContent = selected ? `${selected.name} — ${fmt(selected.weight)} г` : 'Своя тара';
+        updateTareButtons();
+      }
+
+      function selectTarePreset(id) {
+        selectedTarePresetId = id;
+        const preset = tarePresets.find(item => item.id === selectedTarePresetId);
+        if (preset) tareWeight.value = String(preset.weight);
+        renderTarePresets(selectedTarePresetId);
+        closeTareMenu();
+        calculate();
+        save();
+      }
+
+      function openTareMenu() {
+        tareMenu.hidden = false;
+        tareMenuToggle.setAttribute('aria-expanded', 'true');
+      }
+
+      function closeTareMenu() {
+        tareMenu.hidden = true;
+        tareMenuToggle.setAttribute('aria-expanded', 'false');
+      }
+
+      function requestDeleteTare(id) {
+        const preset = tarePresets.find(item => item.id === id);
+        if (!preset) return;
+        tareToDeleteId = id;
+        tareDeleteMessage.textContent = `Удалить «${preset.name}» (${fmt(preset.weight)} г) из сохранённых вариантов?`;
+        tareDeleteDialog.showModal();
+      }
+
+      function confirmDeleteTare() {
+        if (!tareToDeleteId) return;
+        tarePresets = tarePresets.filter(item => item.id !== tareToDeleteId);
+        if (selectedTarePresetId === tareToDeleteId) selectedTarePresetId = '';
+        tareToDeleteId = '';
+        saveTarePresets();
+        renderTarePresets(selectedTarePresetId);
+        tareDeleteDialog.close();
+        tareMenuToggle.focus();
+        calculate();
+        save();
+      }
+
       function addRow(data = {}) {
         const row = template.content.firstElementChild.cloneNode(true);
         for (const key of ['name', 'amount', 'kcal', 'protein', 'fat', 'carbs']) {
           const input = row.querySelector(`.${key}`);
-          input.value = key === 'name' ? (data[key] ?? '') : (data[key] ?? 0);
+          input.value = data[key] ?? '';
           input.addEventListener('input', () => { calculate(); save(); });
         }
         row.querySelector('.remove').addEventListener('click', () => {
@@ -293,8 +546,144 @@
         body.append(row);
       }
 
-      function calculate() {
+      function renderContributions(rows, totals, invalidMacro, complete) {
+        contributions.replaceChildren();
+        contributionCard.hidden = !analyticsToggle.checked || rows.length < 2;
+        if (contributionCard.hidden) return;
+        if (invalidMacro) {
+          const empty = document.createElement('div');
+          empty.className = 'contribution-empty';
+          empty.textContent = 'Исправьте значения БЖУ, чтобы увидеть вклад ингредиентов.';
+          contributions.append(empty);
+          return;
+        }
+
+        const keys = ['kcal', 'protein', 'fat', 'carbs'];
+        const headings = [
+          ['Ингредиент', 'Ингредиент'],
+          ['Ккал', 'Калорийность'],
+          ['Б', 'Белки'],
+          ['Ж', 'Жиры'],
+          ['У', 'Углеводы']
+        ];
+        const header = document.createElement('div');
+        header.className = 'contribution-row';
+        header.setAttribute('role', 'row');
+        for (const [heading, label] of headings) {
+          const cell = document.createElement('div');
+          cell.className = 'contribution-heading';
+          cell.setAttribute('role', 'columnheader');
+          cell.setAttribute('aria-label', label);
+          cell.title = label;
+          cell.textContent = heading;
+          header.append(cell);
+        }
+        contributions.append(header);
+
+        for (const [index, row] of rows.entries()) {
+          const item = document.createElement('div');
+          item.className = 'contribution-row';
+          item.setAttribute('role', 'row');
+          const name = row.querySelector('.name').value.trim() || `Ингредиент ${index + 1}`;
+          const nameCell = document.createElement('div');
+          nameCell.className = 'contribution-name';
+          nameCell.setAttribute('role', 'rowheader');
+          nameCell.textContent = name;
+          item.append(nameCell);
+
+          for (const key of keys) {
+            const cell = document.createElement('div');
+            cell.className = 'contribution-value';
+            cell.setAttribute('role', 'cell');
+            const amount = read(row, key) * read(row, 'amount') / 100;
+            if (row.querySelector(`.${key}`).value === '') {
+              cell.textContent = '—';
+              cell.title = `Для ингредиента не указано значение: ${nutritionLabels[key]}`;
+            } else if (totals[key] > 0) {
+              const percent = amount / totals[key] * 100;
+              if (percent >= 60) cell.classList.add('level-high');
+              else if (percent >= 30) cell.classList.add('level-mid');
+              else if (percent >= 10) cell.classList.add('level-low');
+              cell.textContent = `${fmt(percent)}%`;
+              cell.title = complete[key]
+                ? `${name}: ${fmt(percent)}% вклада`
+                : `${name}: ${fmt(percent)}% среди заполненных значений; итог неполный`;
+            } else {
+              cell.textContent = '—';
+              cell.title = 'Нет значения для этого показателя';
+            }
+            item.append(cell);
+          }
+          contributions.append(item);
+        }
+      }
+
+      async function copyMacroValue(button) {
+        const value = button.textContent.trim();
+        if (!value || value === '—') return;
+        let copied = false;
+        try {
+          if (navigator.clipboard?.writeText) {
+            await navigator.clipboard.writeText(value);
+            copied = true;
+          }
+        } catch (_) {}
+        if (!copied) {
+          const helper = document.createElement('textarea');
+          helper.value = value;
+          helper.setAttribute('readonly', '');
+          helper.style.position = 'fixed';
+          helper.style.left = '-9999px';
+          document.body.append(helper);
+          helper.select();
+          try { copied = document.execCommand('copy'); } catch (_) {}
+          helper.remove();
+        }
+        copyStatus.textContent = copied ? `${button.dataset.copyLabel} скопированы` : `Не удалось скопировать: ${button.dataset.copyLabel}`;
+        clearTimeout(copyStatusTimer);
+        copyStatusTimer = setTimeout(() => { copyStatus.textContent = ''; }, 700);
+      }
+
+      function renderEnergyShare(totals, finalWeight, ready, complete) {
+        const macros = [
+          { key: 'protein', factor: 4 },
+          { key: 'fat', factor: 9 },
+          { key: 'carbs', factor: 4 }
+        ];
+        const names = { protein: 'Белки', fat: 'Жиры', carbs: 'Углеводы' };
+        const energy = Object.fromEntries(macros.map(item => [item.key, totals[item.key] * item.factor]));
+        const totalEnergy = Object.values(energy).reduce((sum, value) => sum + value, 0);
+        const note = document.querySelector('#energy-share-note');
+
+        const macrosComplete = macros.every(item => complete[item.key]);
+        for (const item of macros) {
+          const shareElement = document.querySelector(`#${item.key}-energy-share`);
+          const kcalElement = document.querySelector(`#${item.key}-energy-kcal`);
+          if (ready && totalEnergy > 0) {
+            shareElement.textContent = `${fmt(energy[item.key] / totalEnergy * 100)}%`;
+            kcalElement.textContent = fmt(energy[item.key] / finalWeight * 100);
+          } else {
+            shareElement.textContent = '—';
+            kcalElement.textContent = '—';
+          }
+        }
+
+        document.querySelector('#bju-energy-total').textContent = ready && totalEnergy > 0
+          ? `${fmt(totalEnergy / finalWeight * 100)} ккал`
+          : '— ккал';
+        note.textContent = !ready
+          ? 'Заполните состав и вес блюда, чтобы увидеть расчёт.'
+          : !macrosComplete
+            ? 'Доли рассчитаны по заполненным значениям БЖУ; проверьте предупреждение.'
+          : totalEnergy > 0
+            ? 'Доля от калорийности по формуле 4/9/4 ккал на грамм Б/Ж/У:'
+            : 'Укажите БЖУ ингредиентов, чтобы рассчитать их вклад.';
+      }
+
+      function calculate(portionTargetKey = '') {
         const rows = [...body.querySelectorAll('tr')];
+        const ingredientKeys = ['amount', 'kcal', 'protein', 'fat', 'carbs'];
+        const ingredientRows = rows.filter(row => ['name', ...ingredientKeys].some(key => row.querySelector(`.${key}`).value.trim() !== ''));
         const validRows = rows.filter(row => read(row, 'amount') > 0);
         const invalidMacro = rows.some(row => ['protein', 'fat', 'carbs'].some(key => Number(row.querySelector(`.${key}`).value) > 100));
         const rawWeight = validRows.reduce((sum, row) => sum + read(row, 'amount'), 0);
@@ -307,16 +696,45 @@
         for (const row of validRows) {
           for (const key of Object.keys(totals)) totals[key] += read(row, key) * read(row, 'amount') / 100;
         }
+        const metricKeys = Object.keys(totals);
+        const complete = Object.fromEntries(metricKeys.map(key => [
+          key,
+          validRows.length > 0 && validRows.every(row => row.querySelector(`.${key}`).value !== '')
+        ]));
+        for (const row of rows) {
+          const isIngredient = ingredientRows.includes(row);
+          for (const key of ingredientKeys) {
+            const input = row.querySelector(`.${key}`);
+            const missing = isIngredient && input.value === '';
+            input.classList.toggle('incomplete', missing);
+            input.title = missing ? 'Значение не указано; расчёт этого показателя будет неполным.' : '';
+          }
+        }
+        renderContributions(validRows, totals, invalidMacro, complete);
         const invalidTare = tare > 0 && tare >= grossWeight;
         const ready = Number.isFinite(finalWeight) && finalWeight > 0 && validRows.length > 0 && !invalidMacro && !invalidTare;
-        for (const key of Object.keys(totals)) document.querySelector(`#out-${key}`).textContent = ready ? fmt(totals[key] / finalWeight * 100) : '—';
-        document.querySelector('#batch-kcal').textContent = ready ? `${fmt(totals.kcal)} ккал` : '— ккал';
-        const portion = Number(portionWeight.value);
-        const portionReady = ready && Number.isFinite(portion) && portion > 0;
-        document.querySelector('#portion-kcal').textContent = portionReady ? fmt(totals.kcal / finalWeight * portion) : '—';
-        for (const key of ['protein', 'fat', 'carbs']) {
-          document.querySelector(`#portion-${key}`).textContent = portionReady ? fmt(totals[key] / finalWeight * portion) : '—';
+        renderEnergyShare(totals, finalWeight, ready, complete);
+        const targetInput = portionTargetKey ? portionOutputs[portionTargetKey] : null;
+        const targetValue = targetInput && targetInput.value !== '' ? Number(targetInput.value) : NaN;
+        if (ready && Number.isFinite(targetValue)) {
+          const amountPerGram = totals[portionTargetKey] / finalWeight;
+          if (amountPerGram > 0) portionWeight.value = String(Number((targetValue / amountPerGram).toFixed(1)));
         }
+        const gramsPerPortion = Number(portionWeight.value);
+        for (const key of Object.keys(totals)) {
+          const metricReady = ready;
+          portionOutputs[key].disabled = !metricReady || totals[key] <= 0;
+          if (key === portionTargetKey) continue;
+          portionOutputs[key].value = metricReady && gramsPerPortion > 0
+            ? String(Number((totals[key] / finalWeight * gramsPerPortion).toFixed(1)))
+            : '';
+        }
+        for (const key of Object.keys(totals)) {
+          const output = document.querySelector(`#out-${key}`);
+          output.textContent = ready ? fmt(totals[key] / finalWeight * 100) : '—';
+          output.disabled = !ready;
+        }
+        document.querySelector('#batch-kcal').textContent = ready ? `${fmt(totals.kcal)} ккал` : '— ккал';
         if (rawWeight > 0 && ready) {
           const change = rawWeight - finalWeight;
           const percent = (finalWeight / rawWeight - 1) * 100;
@@ -333,22 +751,38 @@
         if (!validRows.length) messages.push('Добавьте массу хотя бы одного ингредиента, чтобы получить расчёт.');
         if (!(grossWeight > 0)) messages.push('Укажите вес блюда вместе с тарой.');
         else if (invalidTare) messages.push('Вес тары должен быть меньше веса блюда на весах.');
+        for (const [index, row] of ingredientRows.entries()) {
+          const missingKeys = ingredientKeys.filter(key => row.querySelector(`.${key}`).value === '');
+          const missing = missingKeys.map(key => ingredientValueLabels[key]);
+          if (missing.length) {
+            const name = row.querySelector('.name').value.trim() || `Ингредиент ${index + 1}`;
+            const nutritionMissing = missingKeys.every(key => ['protein', 'fat', 'carbs'].includes(key));
+            const list = missing.length === 1
+              ? missing[0]
+              : `${missing.slice(0, -1).join(', ')} и ${missing[missing.length - 1]}`;
+            messages.push(nutritionMissing
+              ? `${name}: не заполнены ${list}.`
+              : `${name}: не заполнены поля ${list}.`);
+          }
+        }
         const errorCount = messages.length;
 
         for (const [index, row] of validRows.entries()) {
-          const declaredKcal = read(row, 'kcal');
-          const macroKcal = 4 * read(row, 'protein') + 9 * read(row, 'fat') + 4 * read(row, 'carbs');
-          const difference = declaredKcal > 0
-            ? Math.abs(macroKcal - declaredKcal) / declaredKcal
-            : (macroKcal > 0 ? 1 : 0);
-          if (difference > 0.2) {
-            const name = row.querySelector('.name').value.trim() || `Ингредиент ${index + 1}`;
-            messages.push(`${name}: по БЖУ примерно ${fmt(macroKcal)} ккал/100 г, указано ${fmt(declaredKcal)} ккал (расхождение больше 20%).`);
-          }
-          if (declaredKcal > 900) {
-            const name = row.querySelector('.name').value.trim() || `Ингредиент ${index + 1}`;
-            messages.push(`${name}: высокая калорийность — ${fmt(declaredKcal)} ккал/100 г. Проверьте значение.`);
-          }
+            const hasKcal = row.querySelector('.kcal').value !== '';
+            const hasMacros = ['protein', 'fat', 'carbs'].every(key => row.querySelector(`.${key}`).value !== '');
+            const declaredKcal = read(row, 'kcal');
+            if (hasKcal && hasMacros) {
+              const macroKcal = 4 * read(row, 'protein') + 9 * read(row, 'fat') + 4 * read(row, 'carbs');
+              const difference = declaredKcal > 0 ? Math.abs(macroKcal - declaredKcal) / declaredKcal : (macroKcal > 0 ? 1 : 0);
+              if (difference > 0.2) {
+                const name = row.querySelector('.name').value.trim() || `Ингредиент ${index + 1}`;
+                messages.push(`${name}: по БЖУ примерно ${fmt(macroKcal)} ккал/100 г, указано ${fmt(declaredKcal)} ккал (расхождение больше 20%).`);
+              }
+            }
+            if (hasKcal && declaredKcal > 900) {
+              const name = row.querySelector('.name').value.trim() || `Ингредиент ${index + 1}`;
+              messages.push(`${name}: высокая калорийность — ${fmt(declaredKcal)} ккал/100 г. Проверьте значение.`);
+            }
         }
         if (ready && totals.kcal / finalWeight * 100 > 900) {
           messages.push(`Готовое блюдо: высокая калорийность — ${fmt(totals.kcal / finalWeight * 100)} ккал/100 г. Проверьте вес и исходные данные.`);
@@ -368,7 +802,16 @@
       }
 
       document.addEventListener('focusin', event => {
-        if (event.target instanceof HTMLInputElement) event.target.select();
+        if (event.target instanceof HTMLInputElement && !['checkbox', 'radio', 'button', 'submit'].includes(event.target.type)) event.target.select();
+      });
+
+      document.querySelectorAll('.copy-value').forEach(button => {
+        button.addEventListener('click', () => copyMacroValue(button));
+      });
+      analyticsToggle.addEventListener('change', () => {
+        analyticsPreferenceSet = true;
+        updateAnalyticsVisibility();
+        save();
       });
 
       document.querySelector('#add').addEventListener('click', () => { addRow(); calculate(); save(); body.lastElementChild.querySelector('.name').focus(); });
@@ -377,6 +820,9 @@
         example.forEach(addRow);
         cookedWeight.value = 889;
         tareWeight.value = 0;
+        selectedTarePresetId = '';
+        renderTarePresets('');
+        updateTareButtons();
         calculate();
         save();
       });
@@ -385,24 +831,91 @@
         addRow();
         cookedWeight.value = 0;
         tareWeight.value = 0;
-        portionWeight.value = 0;
+        selectedTarePresetId = '';
+        renderTarePresets('');
+        updateTareButtons();
         calculate();
         save();
         body.querySelector('.name').focus();
       });
       cookedWeight.addEventListener('input', () => { calculate(); save(); });
-      tareWeight.addEventListener('input', () => { calculate(); save(); });
       portionWeight.addEventListener('input', () => { calculate(); save(); });
+      for (const [key, input] of Object.entries(portionOutputs)) {
+        input.addEventListener('input', () => { calculate(key); save(); });
+      }
+      tareMenuToggle.addEventListener('click', () => {
+        if (tareMenu.hidden) openTareMenu();
+        else closeTareMenu();
+      });
+      tareMenu.addEventListener('keydown', event => {
+        if (event.key === 'Escape') {
+          closeTareMenu();
+          tareMenuToggle.focus();
+        }
+      });
+      document.addEventListener('click', event => {
+        if (!event.target.closest('.tare-preset-controls') && !event.target.closest('#tare-delete-dialog') && !event.target.closest('#tare-dialog')) closeTareMenu();
+      });
+      tareWeight.addEventListener('input', () => {
+        const selected = tarePresets.find(item => item.id === selectedTarePresetId);
+        if (selected && Number(tareWeight.value) !== selected.weight) {
+          selectedTarePresetId = '';
+          renderTarePresets('');
+        }
+        updateTareButtons();
+        calculate();
+        save();
+      });
+      saveTareButton.addEventListener('click', () => {
+        tareDialogWeight.textContent = `${fmt(Number(tareWeight.value))} г`;
+        tareNameInput.value = '';
+        tareDialog.showModal();
+        tareNameInput.focus();
+      });
+      document.querySelector('#cancel-tare').addEventListener('click', () => tareDialog.close());
+      tareForm.addEventListener('submit', event => {
+        event.preventDefault();
+        const name = tareNameInput.value.trim();
+        const weight = Number(tareWeight.value);
+        if (!name || !(weight > 0)) {
+          tareNameInput.reportValidity();
+          return;
+        }
+        const normalizedName = name.toLocaleLowerCase('ru-RU');
+        const existing = tarePresets.find(item => item.name.toLocaleLowerCase('ru-RU') === normalizedName);
+        const preset = existing || { id: `${Date.now()}-${Math.random().toString(36).slice(2)}`, name, weight };
+        preset.name = name;
+        preset.weight = weight;
+        if (!existing) tarePresets.push(preset);
+        saveTarePresets();
+        renderTarePresets(preset.id);
+        tareDialog.close();
+        closeTareMenu();
+        save();
+      });
+      document.querySelector('#cancel-delete-tare').addEventListener('click', () => {
+        tareToDeleteId = '';
+        tareDeleteDialog.close();
+      });
+      document.querySelector('#confirm-delete-tare').addEventListener('click', confirmDeleteTare);
+      tarePresets = loadTarePresets();
       const saved = load();
       if (saved) {
         cookedWeight.value = saved.cookedWeight ?? 0;
         tareWeight.value = saved.tareWeight ?? 0;
         portionWeight.value = saved.portionWeight ?? 0;
+        if (saved.analyticsPreferenceSet === true && typeof saved.showAnalytics === 'boolean') {
+          analyticsPreferenceSet = true;
+          analyticsToggle.checked = saved.showAnalytics;
+        }
+        renderTarePresets(saved.tarePresetId ?? '');
         saved.rows.forEach(row => addRow(row));
         if (!body.querySelector('tr')) addRow();
       } else {
+        renderTarePresets('');
         addRow();
       }
+      updateAnalyticsVisibility();
       calculate();
       save();
     })();
